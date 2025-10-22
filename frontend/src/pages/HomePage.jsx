@@ -1,9 +1,25 @@
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
-// ADD navigateTo as a prop here ✅
-export default function HomePage({ navigateTo }) {
+export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
+
+  // Data Definitions
+  const categories = [
+    'Workout Plans',
+    'Nutrition Guide',
+    'Exercise Library',
+    'Progress Tracker',
+    'Community Forum',
+    'Blog Articles',
+
+  ];
 
   const features = [
     { icon: '📊', title: 'Real-time Tracking', desc: 'Monitor your calories, heart rate, and activity in real-time with our advanced analytics.' },
@@ -55,8 +71,11 @@ export default function HomePage({ navigateTo }) {
   ];
 
   const handlePlaceholderClick = (e) => {
-    e.preventDefault();
-    console.log("Placeholder button clicked.");
+    // Check if e is defined and has preventDefault, otherwise it's just a placeholder for a non-event click
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+    console.log("Placeholder action triggered.");
   };
 
   return (
@@ -72,31 +91,117 @@ export default function HomePage({ navigateTo }) {
             transform: translate3d(0, 0, 0);
           }
         }
-        .hero-title {
+        .animate-fade-in-down {
           animation: fadeInDown 1s ease-out;
-        }
-        .font-sans {
-          font-family: 'Inter', sans-serif;
         }
       `}</style>
 
       {/* Navbar */}
       <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 text-white shadow-2xl bg-gradient-to-r from-blue-700 to-blue-900">
         <div className="flex items-center gap-2 text-2xl font-extrabold tracking-wide">
-          <span className="text-pink-400">▶</span> Vidpros
+          <span className="text-pink-400">🦈</span> Fitness Sharks
         </div>
         
+        {/* Desktop Menu */}
         <div className="items-center hidden gap-8 text-lg font-medium md:flex">
           <a href="#features" className="transition duration-300 hover:text-pink-300">Features</a>
           <a href="#dashboard" className="transition duration-300 hover:text-pink-300">Dashboard</a>
           <a href="#pricing" className="transition duration-300 hover:text-pink-300">Pricing</a>
+          
+          {/* More Dropdown */}
+          <div className="relative">
+            <button 
+              onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+              className="flex items-center gap-1 transition duration-300 hover:text-pink-300"
+            >
+              More <ChevronDown size={20} className={`transition-transform ${moreDropdownOpen ? 'rotate-180' : 'rotate-0'}`}/>
+            </button>
+            
+            {moreDropdownOpen && (
+              <div 
+                className="absolute right-0 w-56 mt-2 overflow-hidden bg-white rounded-lg shadow-2xl top-full"
+                // Prevent scrolling the body when the dropdown is open
+                onClick={(e) => e.stopPropagation()} 
+              >
+                <div className="py-2">
+                  {categories.map((category, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => {
+                        if (category === 'Exercise Library') {
+                          navigate('/exercise-library');
+                        } else if (category === 'Workout Plans') {
+                          navigate('/workout-plans');
+                        } else if (category === 'Blog Articles') {
+                          navigate('/blog-articles');
+                        } else if (category === 'Community Forum') {
+                          navigate('/community-forum');
+                        } else if (category === 'Nutrition Guide') {
+                          navigate('/nutrition-guide');
+                        } else {
+                          handlePlaceholderClick(e);
+                        }
+                        console.log(`Clicked: ${category}`);
+                        setMoreDropdownOpen(false);
+                      }}
+                      className="block w-full px-4 py-2 text-left text-gray-700 transition hover:bg-pink-50 hover:text-pink-600"
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
           <a href="#contact" className="transition duration-300 hover:text-pink-300">Contact</a>
         </div>
 
-        <button className="hidden px-6 py-2 font-bold text-white transition transform bg-pink-500 rounded-full shadow-lg md:block hover:bg-pink-600 hover:scale-105">
-          Download Now
-        </button>
+        {isAuthenticated ? (
+          <div className="relative hidden md:block">
+            <button
+              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+              className="flex items-center gap-3 px-3 py-2 transition rounded-full hover:bg-blue-800"
+            >
+              <div className="flex items-center justify-center font-bold text-blue-900 bg-pink-300 rounded-full w-9 h-9">
+                {(user?.fullName || user?.email || 'U').slice(0, 1).toUpperCase()}
+              </div>
+              <span className="font-semibold">{user?.fullName || user?.email}</span>
+            </button>
+            {profileMenuOpen && (
+              <div className="absolute right-0 w-48 mt-2 overflow-hidden bg-white rounded-lg shadow-2xl">
+                <button
+                  className="block w-full px-4 py-2 text-left text-gray-700 transition hover:bg-gray-100"
+                  onClick={() => {
+                    setProfileMenuOpen(false);
+                    navigate('/profile');
+                  }}
+                >
+                  Profile
+                </button>
+                <button
+                  className="block w-full px-4 py-2 text-left text-gray-700 transition hover:bg-gray-100"
+                  onClick={() => {
+                    setProfileMenuOpen(false);
+                    logout();
+                    navigate('/');
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <button 
+            onClick={() => navigate('/login')} 
+            className="hidden px-6 py-2 font-bold text-white transition transform bg-pink-500 rounded-full shadow-lg md:block hover:bg-pink-600 hover:scale-105"
+          >
+            LOG IN
+          </button>
+        )}
 
+        {/* Mobile Menu Button */}
         <button 
           className="p-2 transition rounded-lg md:hidden hover:bg-blue-800" 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -112,46 +217,98 @@ export default function HomePage({ navigateTo }) {
           <a href="#features" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Features</a>
           <a href="#dashboard" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Dashboard</a>
           <a href="#pricing" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
+          
+          {/* Mobile More Section */}
+          <div className="pt-2 border-t border-blue-700">
+            <p className="px-2 mb-2 text-sm font-semibold text-pink-300">More Categories</p>
+            {categories.map((category, idx) => (
+              <button
+                key={idx}
+                onClick={(e) => {
+                  if (category === 'Exercise Library') {
+                    navigate('/exercise-library');
+                  } else if (category === 'Workout Plans') {
+                    navigate('/workout-plans');
+                  } else if (category === 'Blog Articles') {
+                    navigate('/blog-articles');
+                  } else if (category === 'Community Forum') {
+                    navigate('/community-forum');
+                  } else if (category === 'Nutrition Guide') {
+                    navigate('/nutrition-guide');
+                  } else {
+                    handlePlaceholderClick(e);
+                  }
+                  console.log(`Clicked: ${category}`);
+                  setMobileMenuOpen(false);
+                }}
+                className="block w-full px-2 py-2 text-left transition rounded hover:text-pink-300"
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+          
           <a href="#contact" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Contact</a>
-          <button className="px-6 py-2 mt-2 font-semibold text-white transition bg-pink-500 rounded-full hover:bg-pink-600">
-            Download Now
-          </button>
+          {isAuthenticated ? (
+            <div className="flex items-center justify-between gap-3 p-2 mt-2 bg-blue-800 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center font-bold text-blue-900 bg-pink-300 rounded-full w-9 h-9">
+                  {(user?.fullName || user?.email || 'U').slice(0, 1).toUpperCase()}
+                </div>
+                <div className="font-semibold">{user?.fullName || user?.email}</div>
+              </div>
+              <button 
+                onClick={() => { logout(); setMobileMenuOpen(false); navigate('/'); }} 
+                className="px-4 py-2 font-semibold text-white transition bg-pink-500 rounded-full hover:bg-pink-600"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button 
+              onClick={() => { setMobileMenuOpen(false); navigate('/login'); }} 
+              className="px-6 py-2 mt-2 font-semibold text-white transition bg-pink-500 rounded-full hover:bg-pink-600"
+            >
+              LOG IN
+            </button>
+          )}
         </div>
       )}
 
       {/* Hero Section */}
       <section className="px-6 py-24 text-center text-white bg-gradient-to-r from-blue-600 to-blue-900 md:py-32" style={{ minHeight: '60vh' }}>
         <h1 className="mb-6 text-5xl font-extrabold leading-tight md:text-7xl drop-shadow-lg animate-fade-in-down">
-          BEST FITNESS APP<br />FOR BEGINNERS
+          BEST FITNESS SITE<br />FOR BEGINNERS
         </h1>
         <p className="max-w-3xl mx-auto mb-10 text-xl md:text-2xl opacity-95">
-          Start your fitness journey with Vidpros. Track calories, monitor heart rate, and achieve your goals with ease.
+          Start your fitness journey with Fitness Sharks. Track calories, monitor heart rate, and achieve your goals with ease.
         </p>
         <div className="flex flex-col justify-center gap-4 md:flex-row">
-          <button className="px-10 py-4 text-xl font-bold text-white transition transform bg-pink-500 rounded-full shadow-2xl hover:bg-pink-600 hover:scale-105">
+          <button 
+            onClick={() => navigate('/login')} 
+            className="px-10 py-4 text-xl font-bold text-white transition transform bg-pink-500 rounded-full shadow-2xl hover:bg-pink-600 hover:scale-105"
+          >
             Get Started Free
           </button>
-          <button className="px-10 py-4 text-xl font-bold text-white transition transform border-2 border-white rounded-full hover:bg-white hover:text-blue-900 hover:scale-105">
+          <button 
+            onClick={() => navigate('/exercise-library')} 
+            className="px-10 py-4 text-xl font-bold text-white transition transform border-2 border-white rounded-full hover:bg-white hover:text-blue-900 hover:scale-105"
+          >
             Watch Demo
           </button>
         </div>
       </section>
 
-      {/* Features Section - THIS IS THE KEY CHANGE ✅ */}
+      {/* Features Section */}
       <section id="features" className="px-6 py-24 bg-slate-50">
-        <h2 className="mb-4 text-4xl font-bold text-center text-blue-900 md:text-5xl">Why Choose Vidpros?</h2>
+        <h2 className="mb-4 text-4xl font-bold text-center text-blue-900 md:text-5xl">Why Choose Fitness Sharks?</h2>
         <p className="mb-16 text-xl text-center text-gray-500">Simple tools for complex goals.</p>
         <div className="grid gap-8 mx-auto sm:grid-cols-2 lg:grid-cols-3 max-w-7xl">
           {features.map((feature, idx) => (
             <div 
               key={idx} 
-              className="p-8 transition duration-300 ease-in-out bg-white border-t-4 border-pink-500 shadow-xl cursor-pointer rounded-2xl hover:shadow-2xl hover:-translate-y-2"
-              onClick={() => {
-                // ADD THIS CLICK HANDLER ✅
-                if (feature.title === 'Real-time Tracking') {
-                  navigateTo('tracking');
-                }
-              }}
+              className="p-8 transition duration-300 bg-white border-t-4 border-pink-500 shadow-xl cursor-pointer rounded-2xl hover:shadow-2xl hover:-translate-y-2"
+              onClick={handlePlaceholderClick} // Added placeholder handler
             >
               <div className="mb-4 text-5xl">{feature.icon}</div>
               <h3 className="mb-3 text-2xl font-bold text-blue-900">{feature.title}</h3>
@@ -168,21 +325,21 @@ export default function HomePage({ navigateTo }) {
             <span className="block mb-2 text-lg font-semibold tracking-wider text-pink-500 uppercase">Data-Driven Success</span>
             <h2 className="mb-6 text-4xl font-bold text-blue-900 md:text-5xl">Your Personal Fitness Dashboard</h2>
             <p className="mb-4 text-lg leading-relaxed text-gray-600">
-              Get insights into your daily calorie intake, heart rate, and activity levels all in one place. Everything you need to know, without the noise.
+              Get insights into your daily calorie intake, heart rate, and activity levels all in one place.
             </p>
             <p className="mb-8 text-lg leading-relaxed text-gray-600">
-              Our smart algorithm learns your patterns and provides personalized recommendations to help you achieve your fitness goals faster.
+              Our smart algorithm learns your patterns and provides personalized recommendations.
             </p>
-            <button className="px-8 py-3 text-lg font-semibold text-white transition transform bg-blue-600 rounded-full shadow-md hover:bg-blue-700 hover:scale-105">
+            <button 
+              onClick={() => navigate('/exercise-library')} 
+              className="px-8 py-3 text-lg font-semibold text-white transition transform bg-blue-600 rounded-full shadow-md hover:bg-blue-700 hover:scale-105"
+            >
               Explore Analytics
             </button>
           </div>
-          <div className="bg-gradient-to-br from-purple-500 to-purple-800 rounded-3xl p-12 text-center text-white min-h-[400px] flex flex-col items-center justify-center text-2xl font-semibold shadow-2xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-white bg-opacity-10 backdrop-blur-sm"></div>
-            <div className="relative z-10">
-              <span className="block mb-4 text-6xl">📈</span>
-              Dashboard Preview: Real Data, Real Results [Image of fitness app dashboard]
-            </div>
+          <div className="bg-gradient-to-br from-purple-500 to-purple-800 rounded-3xl p-12 text-center text-white min-h-[400px] flex flex-col items-center justify-center text-2xl font-semibold shadow-2xl">
+            <span className="block mb-4 text-6xl">📈</span>
+            Dashboard Preview: Real Data, Real Results
           </div>
         </div>
       </section>
@@ -228,6 +385,7 @@ export default function HomePage({ navigateTo }) {
               </ul>
 
               <button 
+                onClick={() => navigate('/login')} 
                 className={`w-full py-3 rounded-full font-bold text-lg transition transform hover:scale-[1.01] ${
                   tier.primary 
                     ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-lg shadow-pink-500/50' 
@@ -246,13 +404,14 @@ export default function HomePage({ navigateTo }) {
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-12 mb-12 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <h4 className="mb-4 text-2xl font-bold tracking-wider text-blue-400">Vidpros</h4>
+              <h4 className="mb-4 text-2xl font-bold tracking-wider text-blue-400">Fitness Sharks</h4>
               <p className="text-gray-400">Your journey to better health starts here. We make fitness simple, accessible, and fun.</p>
               <div className="flex gap-4 mt-4">
                 <button 
                   type="button" 
                   onClick={handlePlaceholderClick} 
                   className="p-1 text-xl text-gray-400 transition rounded hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  aria-label="Facebook"
                 >
                   F
                 </button>
@@ -260,6 +419,7 @@ export default function HomePage({ navigateTo }) {
                   type="button" 
                   onClick={handlePlaceholderClick} 
                   className="p-1 text-xl text-gray-400 transition rounded hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  aria-label="Twitter"
                 >
                   T
                 </button>
@@ -267,6 +427,7 @@ export default function HomePage({ navigateTo }) {
                   type="button" 
                   onClick={handlePlaceholderClick} 
                   className="p-1 text-xl text-gray-400 transition rounded hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  aria-label="Instagram"
                 >
                   I
                 </button>
@@ -293,7 +454,7 @@ export default function HomePage({ navigateTo }) {
             ))}
           </div>
           <div className="pt-8 text-sm text-center text-gray-500 border-t border-gray-700">
-            <p>&copy; 2025 Vidpros. All rights reserved. Built with passion and code.</p>
+            <p>&copy; 2025 Fitness Sharks. All rights reserved. Built with passion and code.</p>
           </div>
         </div>
       </footer>
