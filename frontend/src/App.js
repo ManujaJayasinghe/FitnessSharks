@@ -9,6 +9,10 @@ import BlogArticles from "./pages/BlogArticles.jsx";
 import Profile from "./pages/Profile.jsx";
 import CommunityForum from "./pages/CommunityForum.jsx";
 import NutritionGuide from "./pages/NutritionGuide.jsx";
+import TermsPage from "./pages/Terms.jsx";
+import PrivacyPage from "./pages/Privacy.jsx";
+import CookiesPage from "./pages/Cookies.jsx";
+import LicensePage from "./pages/License.jsx";
 
 function App() {
   return (
@@ -24,6 +28,10 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/community-forum" element={<CommunityForum />} />
           <Route path="/nutrition-guide" element={<NutritionGuide />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/cookies" element={<CookiesPage />} />
+          <Route path="/license" element={<LicensePage />} />
         </Routes>
       </Router>
     </AuthProvider>

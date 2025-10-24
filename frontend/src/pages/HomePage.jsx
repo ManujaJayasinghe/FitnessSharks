@@ -442,7 +442,19 @@ export default function HomePage() {
                     <li key={i}>
                       <button 
                         type="button"
-                        onClick={handlePlaceholderClick} 
+                        onClick={() => {
+                          if (link === 'Terms') {
+                            navigate('/terms');
+                          } else if (link === 'Privacy') {
+                            navigate('/privacy');
+                          } else if (link === 'Cookies') {
+                            navigate('/cookies');
+                          } else if (link === 'License') {
+                            navigate('/license');
+                          } else {
+                            handlePlaceholderClick();
+                          }
+                        }} 
                         className="w-full text-base text-left text-gray-300 transition rounded-md hover:text-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400"
                       >
                         {link}
