@@ -84,15 +84,16 @@ export default function TermsPage() {
       {/* Header */}
       <header className="sticky top-0 z-50 px-6 py-4 text-white shadow-lg bg-gradient-to-r from-blue-700 to-blue-900">
         <div className="flex items-center max-w-6xl mx-auto">
-          <button 
+          <button
             onClick={() => window.history.back()}
             className="flex items-center gap-2 px-4 py-2 transition rounded-lg hover:bg-blue-800"
           >
             <ArrowLeft size={20} />
             <span className="font-semibold">Back</span>
           </button>
-          <div className="flex items-center gap-2 ml-8 text-2xl font-extrabold">
-            <span className="text-pink-400">🦈</span> Fitness Sharks
+          <div className="flex items-center gap-2 ml-8 text-2xl font-extrabold min-w-0 flex-shrink-0">
+            <span className="text-pink-400">🦈</span> 
+            <span className="whitespace-nowrap">Fitness Sharks</span>
           </div>
         </div>
       </header>
@@ -111,9 +112,9 @@ export default function TermsPage() {
           <div className="p-8 mb-8 bg-white shadow-lg rounded-2xl">
             <h2 className="mb-4 text-2xl font-bold text-blue-900">Welcome to Fitness Sharks</h2>
             <p className="leading-relaxed text-gray-700">
-              These Terms of Service ("Terms") govern your access to and use of the Fitness Sharks website, 
-              mobile applications, and related services (collectively, the "Service"). Please read these Terms 
-              carefully before using our Service. By accessing or using the Service, you agree to be bound by 
+              These Terms of Service ("Terms") govern your access to and use of the Fitness Sharks website,
+              mobile applications, and related services (collectively, the "Service"). Please read these Terms
+              carefully before using our Service. By accessing or using the Service, you agree to be bound by
               these Terms.
             </p>
           </div>
@@ -121,7 +122,7 @@ export default function TermsPage() {
           {/* Accordion Sections */}
           <div className="space-y-4">
             {sections.map((section, index) => (
-              <div 
+              <div
                 key={index}
                 className="overflow-hidden transition-all duration-300 bg-white shadow-md rounded-xl hover:shadow-lg"
               >
@@ -136,11 +137,10 @@ export default function TermsPage() {
                     <ChevronDown className="flex-shrink-0 text-blue-600" size={24} />
                   )}
                 </button>
-                
-                <div 
-                  className={`transition-all duration-300 overflow-hidden ${
-                    expandedSection === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                  }`}
+
+                <div
+                  className={`transition-all duration-300 overflow-hidden ${expandedSection === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
                 >
                   <div className="px-6 pb-6">
                     <div className="pt-4 border-t border-gray-200">
@@ -158,7 +158,7 @@ export default function TermsPage() {
             <p className="mb-6 text-lg text-blue-100">
               We're here to help. Contact our legal team if you have any questions or concerns.
             </p>
-            <button 
+            <button
               className="px-8 py-3 font-bold text-blue-900 transition transform bg-white rounded-full shadow-lg hover:bg-gray-100 hover:scale-105"
               onClick={() => window.location.href = 'mailto:legal@fitnesssharks.com'}
             >
@@ -169,12 +169,12 @@ export default function TermsPage() {
           {/* Agreement Checkbox */}
           <div className="p-6 mt-8 border-2 border-pink-200 bg-pink-50 rounded-xl">
             <label className="flex items-start gap-3 cursor-pointer">
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 className="w-5 h-5 mt-1 text-pink-500 border-gray-300 rounded focus:ring-pink-500"
               />
               <span className="text-gray-700">
-                I have read and agree to the Terms of Service and understand that by using Fitness Sharks, 
+                I have read and agree to the Terms of Service and understand that by using Fitness Sharks,
                 I am bound by these terms.
               </span>
             </label>

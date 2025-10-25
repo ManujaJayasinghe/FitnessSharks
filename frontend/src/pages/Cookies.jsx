@@ -120,8 +120,9 @@ export default function CookiesPage() {
             <ArrowLeft size={20} />
             <span className="font-semibold">Back</span>
           </button>
-          <div className="flex items-center gap-2 ml-8 text-2xl font-extrabold">
-            <span className="text-pink-400">🦈</span> Fitness Sharks
+          <div className="flex items-center gap-2 ml-8 text-2xl font-extrabold min-w-0 flex-shrink-0">
+            <span className="text-pink-400">🦈</span> 
+            <span className="whitespace-nowrap">Fitness Sharks</span>
           </div>
         </div>
       </header>

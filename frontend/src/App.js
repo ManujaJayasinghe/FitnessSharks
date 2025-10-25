@@ -14,6 +14,13 @@ import PrivacyPage from "./pages/Privacy.jsx";
 import CookiesPage from "./pages/Cookies.jsx";
 import LicensePage from "./pages/License.jsx";
 
+import DayPassPage from "./pages/DayPass.jsx";
+import MonthlyPage from "./pages/Monthly.jsx";
+import AnnualPage from "./pages/Annual.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
+import TourOurGym from "./pages/TourOurGym.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+
 function App() {
   return (
     <AuthProvider>
@@ -32,6 +39,16 @@ function App() {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/cookies" element={<CookiesPage />} />
           <Route path="/license" element={<LicensePage />} />
+
+          <Route path="/day-pass" element={<DayPassPage />} />
+          <Route path="/monthly" element={<MonthlyPage />} />
+          <Route path="/annual" element={<AnnualPage />} />
+          <Route path="/tour-our-gym" element={<TourOurGym />} />
+          <Route path="/admin" element={
+            <ProtectedRoute requireAdmin={true}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
         </Routes>
       </Router>
     </AuthProvider>

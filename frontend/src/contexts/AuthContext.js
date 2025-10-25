@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
       email: userData.email,
       fullName: userData.fullName || userData.email.split('@')[0], // Use email prefix if no full name
       phone: userData.phone || '',
+      userType: userData.userType || 'member',
       loginTime: new Date().toISOString(),
     };
     
@@ -49,6 +50,7 @@ export const AuthProvider = ({ children }) => {
       email: userData.email,
       fullName: userData.fullName,
       phone: userData.phone,
+      userType: userData.userType || 'member',
       signupTime: new Date().toISOString(),
     };
     

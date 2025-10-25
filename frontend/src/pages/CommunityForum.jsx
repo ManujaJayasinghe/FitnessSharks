@@ -199,8 +199,9 @@ export default function CommunityForum() {
     <div className="min-h-screen font-sans bg-gray-50">
       {/* Navbar */}
       <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 text-white shadow-2xl bg-gradient-to-r from-blue-700 to-blue-900">
-        <div className="flex items-center gap-2 text-2xl font-extrabold tracking-wide cursor-pointer">
-          <span className="text-pink-400">🦈</span> Fitness Sharks
+        <div className="flex items-center gap-2 text-2xl font-extrabold tracking-wide cursor-pointer min-w-0 flex-shrink-0">
+          <span className="text-pink-400">🦈</span> 
+          <span className="whitespace-nowrap">Fitness Sharks</span>
         </div>
         
         {/* Desktop Menu */}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Phone, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -14,7 +14,8 @@ export default function AuthPage({ defaultMode }) {
     password: '',
     fullName: '',
     phone: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    userType: 'member' // 'admin' or 'member'
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -112,11 +113,17 @@ export default function AuthPage({ defaultMode }) {
           await new Promise(resolve => setTimeout(resolve, 1000));
           const userData = login({
             email: formData.email,
-            password: formData.password
+            password: formData.password,
+            userType: formData.userType
           });
           console.log('Login successful:', userData);
-          // Redirect to home page
-          navigate('/');
+          
+          // Redirect based on user type
+          if (formData.userType === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
         } else {
           // Simulate signup process
           await new Promise(resolve => setTimeout(resolve, 1000));
@@ -124,11 +131,16 @@ export default function AuthPage({ defaultMode }) {
             email: formData.email,
             password: formData.password,
             fullName: formData.fullName,
-            phone: formData.phone
+            phone: formData.phone,
+            userType: formData.userType
           });
           console.log('Account created successfully:', userData);
-          // Redirect to home page
-          navigate('/');
+          // Redirect based on user type
+          if (formData.userType === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
         }
       } catch (error) {
         console.error('Authentication error:', error);
@@ -157,19 +169,68 @@ export default function AuthPage({ defaultMode }) {
       {/* Auth Card */}
       <div className="w-full max-w-md overflow-hidden bg-white shadow-2xl rounded-3xl">
         {/* Header */}
-        <div className="p-8 text-center text-white bg-gradient-to-r from-blue-600 to-purple-600">
-          <div className="mb-4 text-5xl">🦈</div>
+        <div className={`p-8 text-center text-white ${
+          formData.userType === 'admin' 
+            ? 'bg-gradient-to-r from-purple-600 to-pink-600' 
+            : 'bg-gradient-to-r from-blue-600 to-purple-600'
+        }`}>
+          <div className="mb-4 text-5xl">
+            {formData.userType === 'admin' ? '👑' : '🦈'}
+          </div>
           <h2 className="mb-2 text-3xl font-bold">
             {isLogin ? 'Welcome Back!' : 'Join Fitness Sharks'}
           </h2>
           <p className="opacity-90">
-            {isLogin ? 'Login to continue your fitness journey' : 'Start your fitness transformation today'}
+            {isLogin 
+              ? formData.userType === 'admin' 
+                ? 'Admin login to manage the platform' 
+                : 'Login to continue your fitness journey'
+              : 'Start your fitness transformation today'
+            }
           </p>
         </div>
 
         {/* Form */}
         <div className="p-8">
           <div className="space-y-4">
+            {/* User Type Selection */}
+            <div>
+              <label className="block mb-3 text-sm font-semibold text-gray-700">
+                Login as
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, userType: 'member' })}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    formData.userType === 'member'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="text-2xl">🦈</div>
+                    <div className="font-semibold">Member</div>
+                    <div className="text-xs text-gray-500">Fitness Sharks Member</div>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, userType: 'admin' })}
+                  className={`p-4 rounded-xl border-2 transition-all ${
+                    formData.userType === 'admin'
+                      ? 'border-purple-500 bg-purple-50 text-purple-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="text-2xl">👑</div>
+                    <div className="font-semibold">Admin</div>
+                    <div className="text-xs text-gray-500">Administrator</div>
+                  </div>
+                </button>
+              </div>
+            </div>
             {/* Full Name - Signup Only */}
             {!isLogin && (
               <div>
