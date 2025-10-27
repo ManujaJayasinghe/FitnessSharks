@@ -1,8 +1,12 @@
 
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function AnnualPassPage() {
     const navigate = useNavigate();
+    const { addPurchase } = useAuth();
+    const [showSuccess, setShowSuccess] = useState(false);
     const features = [
         'All Monthly Membership Features',
         '24/7 Gym Access - Even holidays',
@@ -16,6 +20,22 @@ export default function AnnualPassPage() {
         'Exclusive Member Events',
         'Towel Service Included'
     ];
+
+    const handlePurchase = () => {
+        addPurchase({
+            type: 'annual',
+            name: 'Annual Membership',
+            price: 'LKR 149,700',
+            description: 'Annual gym membership with premium benefits',
+            validFor: '365 days',
+            features: features
+        });
+
+        setShowSuccess(true);
+        setTimeout(() => {
+            navigate('/');
+        }, 3000);
+    };
 
     return (
         <div style={{
@@ -98,7 +118,7 @@ export default function AnnualPassPage() {
                     color: '#4facfe',
                     marginBottom: '10px'
                 }}>
-                    $499 <span style={{
+                    LKR 149,700 <span style={{
                         fontSize: '24px',
                         color: '#718096'
                     }}>/year</span>
@@ -109,7 +129,7 @@ export default function AnnualPassPage() {
                     fontSize: '14px',
                     marginBottom: '30px'
                 }}>
-                    That's only $41.58/month when paid annually
+                    That's only LKR 12,475/month when paid annually
                 </div>
 
                 <div style={{
@@ -168,8 +188,8 @@ export default function AnnualPassPage() {
                         e.currentTarget.style.transform = 'translateY(0)';
                         e.currentTarget.style.boxShadow = 'none';
                     }}
-                    onClick={() => navigate('/login')}>
-                    Join Annual
+                    onClick={handlePurchase}>
+                    {showSuccess ? 'Purchase Successful! ✓' : 'Join Annual'}
                 </button>
 
                 <div style={{

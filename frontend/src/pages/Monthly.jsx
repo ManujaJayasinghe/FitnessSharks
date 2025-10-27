@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function ProMonthlyPage() {
     const navigate = useNavigate();
+    const { addPurchase } = useAuth();
+    const [showSuccess, setShowSuccess] = useState(false);
     const features = [
         'Unlimited Gym Access',
         'All Group Classes Included',
@@ -14,6 +18,22 @@ export default function ProMonthlyPage() {
         'Progress Tracking',
         'Member Events Access'
     ];
+
+    const handlePurchase = () => {
+        addPurchase({
+            type: 'monthly',
+            name: 'Monthly Membership',
+            price: 'LKR 14,700',
+            description: 'Monthly gym membership with full access',
+            validFor: '30 days',
+            features: features
+        });
+
+        setShowSuccess(true);
+        setTimeout(() => {
+            navigate('/');
+        }, 3000);
+    };
 
     return (
         <div style={{
@@ -85,7 +105,7 @@ export default function ProMonthlyPage() {
                     color: '#f5576c',
                     marginBottom: '10px'
                 }}>
-                    $49 <span style={{
+                    LKR 14,700 <span style={{
                     fontSize: '24px',
                     color: '#718096'
                 }}>/mo</span>
@@ -148,8 +168,8 @@ export default function ProMonthlyPage() {
                             e.currentTarget.style.transform = 'translateY(0)';
                             e.currentTarget.style.boxShadow = 'none';
                         }}
-                        onClick={() => navigate('/login')}>
-                    Join Monthly
+                        onClick={handlePurchase}>
+                    {showSuccess ? 'Purchase Successful! ✓' : 'Join Monthly'}
                 </button>
 
                 <div style={{

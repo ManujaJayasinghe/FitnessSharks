@@ -65,6 +65,30 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('fitnessSharksUser');
   };
 
+  const addPurchase = (purchaseData) => {
+    if (!user) return;
+    
+    const updatedUser = {
+      ...user,
+      purchases: [
+        ...(user.purchases || []),
+        {
+          id: Date.now(),
+          type: purchaseData.type,
+          name: purchaseData.name,
+          price: purchaseData.price,
+          purchaseDate: new Date().toISOString(),
+          status: 'active',
+          ...purchaseData
+        }
+      ]
+    };
+    
+    setUser(updatedUser);
+    localStorage.setItem('fitnessSharksUser', JSON.stringify(updatedUser));
+    return updatedUser;
+  };
+
   const value = {
     user,
     isAuthenticated: !!user,
@@ -72,6 +96,7 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     logout,
+    addPurchase,
   };
 
   return (

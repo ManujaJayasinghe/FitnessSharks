@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, ChevronDown, Search, MessageCircle, ThumbsUp, User, Clock, TrendingUp, Users, Award, Send } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, MessageCircle, ThumbsUp, User, Clock, TrendingUp, Users, Award, Send, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function CommunityForum() {
@@ -264,6 +264,19 @@ export default function CommunityForum() {
           <button onClick={() => { navigate('/login'); setMobileMenuOpen(false); }} className="px-6 py-2 mt-2 font-semibold text-white transition bg-pink-500 rounded-full hover:bg-pink-600">LOG IN</button>
         </div>
       )}
+
+      {/* Back to Home Button */}
+      <div className="px-6 py-4 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:text-blue-800 transition font-semibold"
+          >
+            <ArrowLeft size={20} />
+            Back to Home
+          </button>
+        </div>
+      </div>
 
       {/* Hero Section */}
       <section className="px-6 py-16 text-center text-white bg-gradient-to-r from-blue-600 to-blue-900">

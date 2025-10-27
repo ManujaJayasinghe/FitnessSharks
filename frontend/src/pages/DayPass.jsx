@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function DayPassPage() {
     const navigate = useNavigate();
+    const { addPurchase } = useAuth();
+    const [showSuccess, setShowSuccess] = useState(false);
     const features = [
         'Full Gym Access (Single Day)',
         'All Equipment Available',
@@ -12,6 +16,26 @@ export default function DayPassPage() {
         'Valid for 24 Hours',
         'Guest WiFi Access'
     ];
+
+    const handlePurchase = () => {
+        // Add purchase to user profile
+        addPurchase({
+            type: 'day-pass',
+            name: 'Day Pass',
+            price: 'LKR 7,500',
+            description: 'Single day gym access',
+            validFor: '24 hours',
+            features: features
+        });
+
+        // Show success message
+        setShowSuccess(true);
+
+        // Auto redirect to home after 3 seconds
+        setTimeout(() => {
+            navigate('/');
+        }, 3000);
+    };
 
     return (
         <div style={{
@@ -83,7 +107,7 @@ export default function DayPassPage() {
                     color: '#667eea',
                     marginBottom: '40px'
                 }}>
-                    $25
+                    LKR 7,500
                 </div>
 
                 <div style={{
@@ -125,26 +149,51 @@ export default function DayPassPage() {
                 <button style={{
                     width: '100%',
                     padding: '18px',
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: showSuccess ? 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                     color: 'white',
                     border: 'none',
                     borderRadius: '12px',
                     fontSize: '18px',
                     fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'transform 0.2s, box-shadow 0.2s'
+                    cursor: showSuccess ? 'default' : 'pointer',
+                    transition: 'all 0.3s ease',
+                    transform: showSuccess ? 'scale(1.02)' : 'scale(1)'
                 }}
                         onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                            e.currentTarget.style.boxShadow = '0 10px 25px rgba(102, 126, 234, 0.4)';
+                            if (!showSuccess) {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.boxShadow = '0 10px 25px rgba(102, 126, 234, 0.4)';
+                            }
                         }}
                         onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = 'none';
+                            if (!showSuccess) {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = 'none';
+                            }
                         }}
-                        onClick={() => navigate('/login')}>
-                    Buy Day Pass
+                        onClick={handlePurchase}
+                        disabled={showSuccess}>
+                    {showSuccess ? 'Purchase Successful! ✓' : 'Buy Day Pass'}
                 </button>
+
+                {showSuccess && (
+                    <div style={{
+                        marginTop: '20px',
+                        padding: '15px',
+                        background: '#f0fff4',
+                        border: '2px solid #48bb78',
+                        borderRadius: '12px',
+                        textAlign: 'center',
+                        color: '#2f855a',
+                        fontSize: '16px',
+                        fontWeight: '600'
+                    }}>
+                        🎉 Pass Purchase Successful! 🎉
+                        <div style={{ fontSize: '14px', marginTop: '8px', fontWeight: 'normal' }}>
+                            Redirecting to home in 3 seconds...
+                        </div>
+                    </div>
+                )}
 
                 <div style={{
                     textAlign: 'center',

@@ -30,7 +30,7 @@ export default function AdminDashboard() {
   const stats = [
     { id: 'members', title: 'Active Members', value: '2,847', change: '+12%', icon: Users, color: 'blue' },
     { id: 'sessions', title: 'Daily Check-ins', value: '421', change: '+8%', icon: Activity, color: 'green' },
-    { id: 'revenue', title: 'Monthly Revenue', value: '$89,432', change: '+23%', icon: DollarSign, color: 'purple' },
+    { id: 'revenue', title: 'Monthly Revenue', value: 'LKR 26,829,600', change: '+23%', icon: DollarSign, color: 'purple' },
     { id: 'growth', title: 'Member Growth', value: '15.3%', change: '+5%', icon: TrendingUp, color: 'pink' }
   ];
 
@@ -521,7 +521,7 @@ export default function AdminDashboard() {
                     <h3 className="text-sm font-medium text-gray-600">Total Revenue</h3>
                     <DollarSign className="w-5 h-5 text-green-500" />
                   </div>
-                  <p className="text-3xl font-bold text-gray-900">$127,450</p>
+                  <p className="text-3xl font-bold text-gray-900">LKR 38,235,000</p>
                   <p className="text-sm text-green-600 mt-1">+23% from last month</p>
                 </div>
                 <div className="bg-white p-6 rounded-xl shadow-sm border">
@@ -537,7 +537,7 @@ export default function AdminDashboard() {
                     <h3 className="text-sm font-medium text-gray-600">Avg. Revenue/User</h3>
                     <TrendingUp className="w-5 h-5 text-purple-500" />
                   </div>
-                  <p className="text-3xl font-bold text-gray-900">$15.12</p>
+                  <p className="text-3xl font-bold text-gray-900">LKR 4,536</p>
                   <p className="text-sm text-green-600 mt-1">+7% from last month</p>
                 </div>
                 <div className="bg-white p-6 rounded-xl shadow-sm border">
@@ -561,7 +561,7 @@ export default function AdminDashboard() {
                         <p className="text-sm text-blue-600">4,231 subscribers</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xl font-bold text-blue-900">$42,310</p>
+                        <p className="text-xl font-bold text-blue-900">LKR 12,693,000</p>
                         <p className="text-sm text-blue-600">33% of total</p>
                       </div>
                     </div>
@@ -571,7 +571,7 @@ export default function AdminDashboard() {
                         <p className="text-sm text-purple-600">2,145 subscribers</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xl font-bold text-purple-900">$64,350</p>
+                        <p className="text-xl font-bold text-purple-900">LKR 19,305,000</p>
                         <p className="text-sm text-purple-600">51% of total</p>
                       </div>
                     </div>
@@ -581,7 +581,7 @@ export default function AdminDashboard() {
                         <p className="text-sm text-green-600">2,056 conversions</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xl font-bold text-green-900">$20,790</p>
+                        <p className="text-xl font-bold text-green-900">LKR 6,237,000</p>
                         <p className="text-sm text-green-600">16% of total</p>
                       </div>
                     </div>

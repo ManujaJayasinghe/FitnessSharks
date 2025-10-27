@@ -17,6 +17,11 @@ import LicensePage from "./pages/License.jsx";
 import DayPassPage from "./pages/DayPass.jsx";
 import MonthlyPage from "./pages/Monthly.jsx";
 import AnnualPage from "./pages/Annual.jsx";
+import AboutPage from "./pages/About.jsx";
+import CareersPage from "./pages/Careers.jsx";
+import ContactPage from "./pages/Contact.jsx";
+import PressPage from "./pages/Press.jsx";
+import ProgressTracker from "./pages/ProgressTracker.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import TourOurGym from "./pages/TourOurGym.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
@@ -43,6 +48,11 @@ function App() {
           <Route path="/day-pass" element={<DayPassPage />} />
           <Route path="/monthly" element={<MonthlyPage />} />
           <Route path="/annual" element={<AnnualPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/careers" element={<CareersPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/press" element={<PressPage />} />
+          <Route path="/progress-tracker" element={<ProgressTracker />} />
           <Route path="/tour-our-gym" element={<TourOurGym />} />
           <Route path="/admin" element={
             <ProtectedRoute requireAdmin={true}>

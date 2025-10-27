@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, X, ChevronDown, Search } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, Facebook, Twitter, Instagram } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -47,6 +47,10 @@ export default function HomePage() {
     { title: 'Contact', type: 'section', target: '#contact', description: 'Contact information and location' },
 
     // Categories/Pages
+    { title: 'About Us', type: 'page', target: '/about', description: 'Learn about Fitness Sharks mission, team, and values' },
+    { title: 'Careers', type: 'page', target: '/careers', description: 'Join our team and build your fitness career' },
+    { title: 'Contact Us', type: 'page', target: '/contact', description: 'Get in touch with our team for support and inquiries' },
+    { title: 'Press & Media', type: 'page', target: '/press', description: 'Latest news, press releases, and media resources' },
     { title: 'Tour Our Gym', type: 'page', target: '/tour-our-gym', description: 'Virtual tour of our facilities with photos and videos' },
     { title: 'Workout Plans', type: 'page', target: '/workout-plans', description: 'Personalized workout routines' },
     { title: 'Nutrition Guide', type: 'page', target: '/nutrition-guide', description: 'Diet and nutrition advice' },
@@ -139,7 +143,7 @@ export default function HomePage() {
   const pricingTiers = [
     {
       name: 'Day Pass',
-      price: '$25',
+      price: 'LKR 7,500',
       period: 'single visit',
       features: ['Full Gym Access', 'Locker Room Access', 'Basic Equipment Use', 'No Long-term Commitment'],
       cta: 'Buy Day Pass',
@@ -147,7 +151,7 @@ export default function HomePage() {
     },
     {
       name: 'Monthly',
-      price: '$49',
+      price: 'LKR 14,700',
       period: 'per month',
       features: ['Unlimited Gym Access', 'Group Classes Included', 'Personal Training Discount', 'Nutrition Consultation', 'Guest Pass (2/month)'],
       cta: 'Join Monthly',
@@ -155,7 +159,7 @@ export default function HomePage() {
     },
     {
       name: 'Annual',
-      price: '$499',
+      price: 'LKR 149,700',
       period: 'per year (save 15%)',
       features: ['All Monthly Features', '24/7 Access', 'Free Personal Training Session', 'Premium Locker', 'Unlimited Guest Passes'],
       cta: 'Join Annual',
@@ -164,7 +168,6 @@ export default function HomePage() {
   ];
 
   const footerLinks = [
-    { title: 'Product', links: ['Features', 'Pricing', 'Security', 'Blog'] },
     { title: 'Company', links: ['About', 'Careers', 'Press', 'Contact'] },
     { title: 'Legal', links: ['Privacy', 'Terms', 'Cookies', 'License'] },
   ];
@@ -491,15 +494,68 @@ export default function HomePage() {
               From cardio zones to strength training areas, swimming pools to group fitness studios - we have everything you need.
             </p>
             <button
-              onClick={() => navigate('/exercise-library')}
+              onClick={() => navigate('/tour-our-gym')}
               className="px-8 py-3 text-lg font-semibold text-white transition transform bg-blue-600 rounded-full shadow-md hover:bg-blue-700 hover:scale-105"
             >
               Virtual Tour
             </button>
           </div>
-          <div className="bg-gradient-to-br from-purple-500 to-purple-800 rounded-3xl p-12 text-center text-white min-h-[400px] flex flex-col items-center justify-center text-2xl font-semibold shadow-2xl">
-            <span className="block mb-4 text-6xl">🏋️</span>
-            Premium Equipment & Facilities
+          <div className="grid grid-cols-2 gap-4 h-[400px]">
+            {/* Top Left - Cardio Equipment */}
+            <div className="relative overflow-hidden rounded-2xl shadow-lg group">
+              <img
+                src="/fitness-computer-desktop-backgrounds-wallpaper-preview.jpg"
+                alt="Cardio Equipment"
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-4 left-4 text-white">
+                <h3 className="text-lg font-bold">Cardio Zone</h3>
+                <p className="text-sm opacity-90">Modern Equipment</p>
+              </div>
+            </div>
+
+            {/* Top Right - Strength Training */}
+            <div className="relative overflow-hidden rounded-2xl shadow-lg group">
+              <img
+                src="/pngtree-rows-of-dumbbells-in-the-gym-image_15662386.jpg"
+                alt="Strength Training"
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-4 left-4 text-white">
+                <h3 className="text-lg font-bold">Free Weights</h3>
+                <p className="text-sm opacity-90">Complete Range</p>
+              </div>
+            </div>
+
+            {/* Bottom Left - Functional Training */}
+            <div className="relative overflow-hidden rounded-2xl shadow-lg group">
+              <img
+                src="/pexels-victorfreitas-841130.jpg"
+                alt="Functional Training"
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-4 left-4 text-white">
+                <h3 className="text-lg font-bold">Training Area</h3>
+                <p className="text-sm opacity-90">Functional Fitness</p>
+              </div>
+            </div>
+
+            {/* Bottom Right - Premium Facilities */}
+            <div className="relative overflow-hidden rounded-2xl shadow-lg group">
+              <img
+                src="/unleash-your-strength-at-4k-gym-mqz006pbxscrtjga.jpg"
+                alt="Premium Facilities"
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-4 left-4 text-white">
+                <h3 className="text-lg font-bold">Elite Zone</h3>
+                <p className="text-sm opacity-90">Premium Training</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -532,7 +588,7 @@ export default function HomePage() {
 
               <div className="mb-8 text-6xl font-extrabold text-blue-900">
                 {tier.price}
-                <span className="ml-1 text-xl font-medium text-gray-500">{tier.price !== '$0' && '/mo'}</span>
+                <span className="ml-1 text-xl font-medium text-gray-500">{tier.price !== 'LKR 0' && '/mo'}</span>
               </div>
 
               <ul className="mb-10 space-y-4 text-left">
@@ -579,26 +635,26 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={handlePlaceholderClick}
-                  className="p-1 text-xl text-gray-400 transition rounded hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="p-2 text-gray-400 transition rounded-full hover:text-blue-400 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   aria-label="Facebook"
                 >
-                  F
+                  <Facebook size={20} />
                 </button>
                 <button
                   type="button"
                   onClick={handlePlaceholderClick}
-                  className="p-1 text-xl text-gray-400 transition rounded hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="p-2 text-gray-400 transition rounded-full hover:text-blue-400 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
                   aria-label="Twitter"
                 >
-                  T
+                  <Twitter size={20} />
                 </button>
                 <button
                   type="button"
                   onClick={handlePlaceholderClick}
-                  className="p-1 text-xl text-gray-400 transition rounded hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="p-2 text-gray-400 transition rounded-full hover:text-pink-400 hover:bg-pink-900 focus:outline-none focus:ring-2 focus:ring-pink-400"
                   aria-label="Instagram"
                 >
-                  I
+                  <Instagram size={20} />
                 </button>
               </div>
             </div>
@@ -612,7 +668,20 @@ export default function HomePage() {
                       <button
                         type="button"
                         onClick={() => {
-                          if (link === 'Terms') {
+                          console.log('Footer link clicked:', link);
+                          if (link === 'About') {
+                            console.log('Navigating to /about');
+                            navigate('/about');
+                          } else if (link === 'Careers') {
+                            console.log('Navigating to /careers');
+                            navigate('/careers');
+                          } else if (link === 'Contact') {
+                            console.log('Navigating to /contact');
+                            navigate('/contact');
+                          } else if (link === 'Press') {
+                            console.log('Navigating to /press');
+                            navigate('/press');
+                          } else if (link === 'Terms') {
                             navigate('/terms');
                           } else if (link === 'Privacy') {
                             navigate('/privacy');
