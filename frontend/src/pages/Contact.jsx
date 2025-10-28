@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Menu, X, MapPin, Phone, Mail, Clock, Send, MessageSquare, HelpCircle, ChevronDown, ArrowLeft } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, MessageSquare, HelpCircle, ChevronDown, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Navigation from '../components/Navigation';
 
 export default function ContactPage() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -88,6 +88,29 @@ export default function ContactPage() {
             alert('Please fill in all required fields.');
             return;
         }
+
+        // Create message object with timestamp and ID
+        const newMessage = {
+            id: Date.now(),
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || 'Not provided',
+            subject: formData.subject,
+            message: formData.message,
+            timestamp: new Date().toISOString(),
+            status: 'unread',
+            priority: formData.subject === 'feedback' ? 'high' : 'normal'
+        };
+
+        // Get existing messages from localStorage
+        const existingMessages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+        
+        // Add new message to the beginning of the array
+        const updatedMessages = [newMessage, ...existingMessages];
+        
+        // Store back to localStorage
+        localStorage.setItem('contactMessages', JSON.stringify(updatedMessages));
+
         alert(`Thank you ${formData.name}! We have received your message and will get back to you within 24 hours.`);
         setFormData({
             name: '',
@@ -100,47 +123,7 @@ export default function ContactPage() {
 
     return (
         <div className="min-h-screen font-sans bg-white">
-            {/* Navbar */}
-            <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 text-white shadow-2xl bg-gradient-to-r from-blue-700 to-blue-900">
-                <button onClick={() => navigate('/')} className="flex items-center gap-2 text-2xl font-extrabold tracking-wide">
-                    <span className="text-pink-400">🦈</span>
-                    <span>Fitness Sharks</span>
-                </button>
-
-                <div className="items-center hidden gap-8 text-lg font-medium md:flex">
-                    <button onClick={() => navigate('/')} className="transition duration-300 hover:text-pink-300">Home</button>
-                    <button onClick={() => navigate('/#features')} className="transition duration-300 hover:text-pink-300">Features</button>
-                    <button onClick={() => navigate('/#pricing')} className="transition duration-300 hover:text-pink-300">Pricing</button>
-                    <button onClick={() => navigate('/about')} className="transition duration-300 hover:text-pink-300">About</button>
-                    <button onClick={() => navigate('/careers')} className="transition duration-300 hover:text-pink-300">Careers</button>
-                </div>
-
-                <button
-                    onClick={() => navigate('/login')}
-                    className="hidden px-6 py-2 font-bold text-white transition transform bg-pink-500 rounded-full shadow-lg md:block hover:bg-pink-600 hover:scale-105"
-                >
-                    LOG IN
-                </button>
-
-                <button
-                    className="p-2 transition rounded-lg md:hidden hover:bg-blue-800"
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                >
-                    {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                </button>
-            </nav>
-
-            {/* Mobile Menu */}
-            {mobileMenuOpen && (
-                <div className="relative z-40 flex flex-col gap-4 p-4 text-white bg-blue-900 shadow-xl md:hidden">
-                    <a href="/" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Home</a>
-                    <a href="/#features" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Features</a>
-                    <a href="/#pricing" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
-                    <a href="/about" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>About</a>
-                    <a href="/careers" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Careers</a>
-                    <a href="/login" className="px-6 py-2 mt-2 font-semibold text-center text-white transition bg-pink-500 rounded-full hover:bg-pink-600">LOG IN</a>
-                </div>
-            )}
+            <Navigation />
 
             {/* Back to Home Button */}
             <div className="px-6 py-4 bg-gray-50">

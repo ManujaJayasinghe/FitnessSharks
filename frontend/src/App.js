@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import HomePage from "./pages/HomePage.jsx";
 import ExerciseLibrary from "./pages/ExerciseLibrary.jsx";
-import WorkoutPlans from "./pages/WorkoutPlan.jsx";
+import WorkoutPlans from "./pages/WorkoutPlans.jsx";
 import AuthPage from "./pages/Login.jsx";
 import BlogArticles from "./pages/BlogArticles.jsx";
 import Profile from "./pages/Profile.jsx";
@@ -54,7 +54,7 @@ function App() {
           <Route path="/press" element={<PressPage />} />
           <Route path="/progress-tracker" element={<ProgressTracker />} />
           <Route path="/tour-our-gym" element={<TourOurGym />} />
-          <Route path="/admin" element={
+          <Route path="/admin-dashboard" element={
             <ProtectedRoute requireAdmin={true}>
               <AdminDashboard />
             </ProtectedRoute>

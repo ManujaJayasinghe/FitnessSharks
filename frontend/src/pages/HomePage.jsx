@@ -237,7 +237,7 @@ export default function HomePage() {
             )}
           </div>
 
-          <a href="#contact" className="transition duration-300 hover:text-pink-300">Contact</a>
+
 
           {/* Search Bar */}
           <div className="relative" ref={searchRef}>
@@ -338,7 +338,7 @@ export default function HomePage() {
           <a href="#features" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Features</a>
           <a href="#dashboard" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Dashboard</a>
           <a href="#pricing" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
-          <a href="#contact" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Contact</a>
+
 
           {/* Mobile Search */}
           <div className="relative mt-4 border-t border-blue-800 pt-4">

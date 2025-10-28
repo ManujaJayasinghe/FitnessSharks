@@ -68,7 +68,7 @@ export default function AuthPage({ defaultMode }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-    
+
     setIsSubmitting(true);
     const newErrors = {};
 
@@ -111,16 +111,25 @@ export default function AuthPage({ defaultMode }) {
         if (isLogin) {
           // Simulate login process
           await new Promise(resolve => setTimeout(resolve, 1000));
+
+          // Check for admin credentials
+          let userType = formData.userType;
+          if (formData.email === 'admin@fitnesssharks.lk' && formData.password === 'admin123') {
+            userType = 'admin';
+          }
+
           const userData = login({
             email: formData.email,
             password: formData.password,
-            userType: formData.userType
+            userType: userType
           });
           console.log('Login successful:', userData);
-          
+          console.log('User type:', userType);
+          console.log('Navigating to:', userType === 'admin' ? '/admin-dashboard' : '/');
+
           // Redirect based on user type
-          if (formData.userType === 'admin') {
-            navigate('/admin');
+          if (userType === 'admin') {
+            navigate('/admin-dashboard');
           } else {
             navigate('/');
           }
@@ -137,7 +146,7 @@ export default function AuthPage({ defaultMode }) {
           console.log('Account created successfully:', userData);
           // Redirect based on user type
           if (formData.userType === 'admin') {
-            navigate('/admin');
+            navigate('/admin-dashboard');
           } else {
             navigate('/');
           }
@@ -147,7 +156,7 @@ export default function AuthPage({ defaultMode }) {
         alert('An error occurred. Please try again.');
       }
     }
-    
+
     setIsSubmitting(false);
   };
 
@@ -169,11 +178,10 @@ export default function AuthPage({ defaultMode }) {
       {/* Auth Card */}
       <div className="w-full max-w-md overflow-hidden bg-white shadow-2xl rounded-3xl">
         {/* Header */}
-        <div className={`p-8 text-center text-white ${
-          formData.userType === 'admin' 
-            ? 'bg-gradient-to-r from-purple-600 to-pink-600' 
-            : 'bg-gradient-to-r from-blue-600 to-purple-600'
-        }`}>
+        <div className={`p-8 text-center text-white ${formData.userType === 'admin'
+          ? 'bg-gradient-to-r from-purple-600 to-pink-600'
+          : 'bg-gradient-to-r from-blue-600 to-purple-600'
+          }`}>
           <div className="mb-4 text-5xl">
             {formData.userType === 'admin' ? '👑' : '🦈'}
           </div>
@@ -181,9 +189,9 @@ export default function AuthPage({ defaultMode }) {
             {isLogin ? 'Welcome Back!' : 'Join Fitness Sharks'}
           </h2>
           <p className="opacity-90">
-            {isLogin 
-              ? formData.userType === 'admin' 
-                ? 'Admin login to manage the platform' 
+            {isLogin
+              ? formData.userType === 'admin'
+                ? 'Admin login to manage the platform'
                 : 'Login to continue your fitness journey'
               : 'Start your fitness transformation today'
             }
@@ -202,11 +210,10 @@ export default function AuthPage({ defaultMode }) {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, userType: 'member' })}
-                  className={`p-4 rounded-xl border-2 transition-all ${
-                    formData.userType === 'member'
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  className={`p-4 rounded-xl border-2 transition-all ${formData.userType === 'member'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-gray-300'
+                    }`}
                 >
                   <div className="flex flex-col items-center gap-2">
                     <div className="text-2xl">🦈</div>
@@ -217,11 +224,10 @@ export default function AuthPage({ defaultMode }) {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, userType: 'admin' })}
-                  className={`p-4 rounded-xl border-2 transition-all ${
-                    formData.userType === 'admin'
-                      ? 'border-purple-500 bg-purple-50 text-purple-700'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  className={`p-4 rounded-xl border-2 transition-all ${formData.userType === 'admin'
+                    ? 'border-purple-500 bg-purple-50 text-purple-700'
+                    : 'border-gray-200 hover:border-gray-300'
+                    }`}
                 >
                   <div className="flex flex-col items-center gap-2">
                     <div className="text-2xl">👑</div>
@@ -245,9 +251,8 @@ export default function AuthPage({ defaultMode }) {
                     value={formData.fullName}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className={`w-full py-3 pl-12 pr-4 transition border-2 rounded-xl focus:outline-none ${
-                      errors.fullName ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
-                    }`}
+                    className={`w-full py-3 pl-12 pr-4 transition border-2 rounded-xl focus:outline-none ${errors.fullName ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
+                      }`}
                   />
                 </div>
                 {errors.fullName && (
@@ -269,9 +274,8 @@ export default function AuthPage({ defaultMode }) {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  className={`w-full py-3 pl-12 pr-4 transition border-2 rounded-xl focus:outline-none ${
-                    errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
-                  }`}
+                  className={`w-full py-3 pl-12 pr-4 transition border-2 rounded-xl focus:outline-none ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
+                    }`}
                 />
               </div>
               {errors.email && (
@@ -293,9 +297,8 @@ export default function AuthPage({ defaultMode }) {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="+1 (555) 123-4567"
-                    className={`w-full py-3 pl-12 pr-4 transition border-2 rounded-xl focus:outline-none ${
-                      errors.phone ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
-                    }`}
+                    className={`w-full py-3 pl-12 pr-4 transition border-2 rounded-xl focus:outline-none ${errors.phone ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
+                      }`}
                   />
                 </div>
                 {errors.phone && (
@@ -317,9 +320,8 @@ export default function AuthPage({ defaultMode }) {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className={`w-full py-3 pl-12 pr-12 transition border-2 rounded-xl focus:outline-none ${
-                    errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
-                  }`}
+                  className={`w-full py-3 pl-12 pr-12 transition border-2 rounded-xl focus:outline-none ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
+                    }`}
                 />
                 <button
                   type="button"
@@ -332,7 +334,7 @@ export default function AuthPage({ defaultMode }) {
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600">{errors.password}</p>
               )}
-              
+
               {/* Password Strength Indicator - Only for Signup */}
               {!isLogin && formData.password && (
                 <div className="mt-2">
@@ -342,30 +344,28 @@ export default function AuthPage({ defaultMode }) {
                       {[1, 2, 3, 4, 5].map((level) => (
                         <div
                           key={level}
-                          className={`h-1 w-4 rounded ${
-                            level <= getPasswordStrength(formData.password)
-                              ? getPasswordStrength(formData.password) <= 2
-                                ? 'bg-red-500'
-                                : getPasswordStrength(formData.password) <= 3
+                          className={`h-1 w-4 rounded ${level <= getPasswordStrength(formData.password)
+                            ? getPasswordStrength(formData.password) <= 2
+                              ? 'bg-red-500'
+                              : getPasswordStrength(formData.password) <= 3
                                 ? 'bg-yellow-500'
                                 : 'bg-green-500'
-                              : 'bg-gray-200'
-                          }`}
+                            : 'bg-gray-200'
+                            }`}
                         />
                       ))}
                     </div>
-                    <span className={`text-xs font-medium ${
-                      getPasswordStrength(formData.password) <= 2
-                        ? 'text-red-600'
-                        : getPasswordStrength(formData.password) <= 3
+                    <span className={`text-xs font-medium ${getPasswordStrength(formData.password) <= 2
+                      ? 'text-red-600'
+                      : getPasswordStrength(formData.password) <= 3
                         ? 'text-yellow-600'
                         : 'text-green-600'
-                    }`}>
+                      }`}>
                       {getPasswordStrength(formData.password) <= 2
                         ? 'Weak'
                         : getPasswordStrength(formData.password) <= 3
-                        ? 'Medium'
-                        : 'Strong'}
+                          ? 'Medium'
+                          : 'Strong'}
                     </span>
                   </div>
                 </div>
@@ -386,9 +386,8 @@ export default function AuthPage({ defaultMode }) {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className={`w-full py-3 pl-12 pr-12 transition border-2 rounded-xl focus:outline-none ${
-                      errors.confirmPassword ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
-                    }`}
+                    className={`w-full py-3 pl-12 pr-12 transition border-2 rounded-xl focus:outline-none ${errors.confirmPassword ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
+                      }`}
                   />
                   <button
                     type="button"
@@ -419,15 +418,25 @@ export default function AuthPage({ defaultMode }) {
               </div>
             )}
 
+            {/* Admin Credentials Info */}
+            {isLogin && formData.userType === 'admin' && (
+              <div className="p-4 bg-purple-50 border border-purple-200 rounded-xl">
+                <div className="text-sm text-purple-800">
+                  <div className="font-semibold mb-1">Admin Test Credentials:</div>
+                  <div>Email: admin@fitnesssharks.lk</div>
+                  <div>Password: admin123</div>
+                </div>
+              </div>
+            )}
+
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className={`w-full py-3 rounded-xl font-bold text-lg transition transform shadow-lg ${
-                isSubmitting 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:scale-[1.02]'
-              } text-white`}
+              className={`w-full py-3 rounded-xl font-bold text-lg transition transform shadow-lg ${isSubmitting
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:scale-[1.02]'
+                } text-white`}
             >
               {isSubmitting ? (
                 <div className="flex items-center justify-center gap-2">
@@ -457,10 +466,10 @@ export default function AuthPage({ defaultMode }) {
               className="flex items-center justify-center w-full gap-3 px-4 py-3 font-semibold transition border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
               Continue with Google
             </button>
@@ -470,7 +479,7 @@ export default function AuthPage({ defaultMode }) {
               className="flex items-center justify-center w-full gap-3 px-4 py-3 font-semibold text-white transition bg-blue-600 rounded-xl hover:bg-blue-700"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
               </svg>
               Continue with Facebook
             </button>
@@ -480,7 +489,7 @@ export default function AuthPage({ defaultMode }) {
               className="flex items-center justify-center w-full gap-3 px-4 py-3 font-semibold text-white transition bg-black rounded-xl hover:bg-gray-900"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
               </svg>
               Continue with Twitter
             </button>

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Menu, X, MapPin, Clock, DollarSign, Users, Award, Heart, TrendingUp, ArrowRight, ArrowLeft } from 'lucide-react';
+import { MapPin, Clock, DollarSign, Users, Award, Heart, TrendingUp, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Navigation from '../components/Navigation';
 
 export default function CareersPage() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState('All');
     const [selectedJob, setSelectedJob] = useState(null);
     const navigate = useNavigate();
@@ -176,45 +176,7 @@ export default function CareersPage() {
 
     return (
         <div className="min-h-screen font-sans bg-white">
-            {/* Navbar */}
-            <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 text-white shadow-2xl bg-gradient-to-r from-blue-700 to-blue-900">
-                <button onClick={() => navigate('/')} className="flex items-center gap-2 text-2xl font-extrabold tracking-wide">
-                    <span className="text-pink-400">🦈</span>
-                    <span>Fitness Sharks</span>
-                </button>
-
-                <div className="items-center hidden gap-8 text-lg font-medium md:flex">
-                    <button onClick={() => navigate('/')} className="transition duration-300 hover:text-pink-300">Home</button>
-                    <button onClick={() => navigate('/#features')} className="transition duration-300 hover:text-pink-300">Features</button>
-                    <button onClick={() => navigate('/#pricing')} className="transition duration-300 hover:text-pink-300">Pricing</button>
-                    <button onClick={() => navigate('/about')} className="transition duration-300 hover:text-pink-300">About</button>
-                </div>
-
-                <button
-                    onClick={() => navigate('/login')}
-                    className="hidden px-6 py-2 font-bold text-white transition transform bg-pink-500 rounded-full shadow-lg md:block hover:bg-pink-600 hover:scale-105"
-                >
-                    LOG IN
-                </button>
-
-                <button
-                    className="p-2 transition rounded-lg md:hidden hover:bg-blue-800"
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                >
-                    {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                </button>
-            </nav>
-
-            {/* Mobile Menu */}
-            {mobileMenuOpen && (
-                <div className="relative z-40 flex flex-col gap-4 p-4 text-white bg-blue-900 shadow-xl md:hidden">
-                    <a href="/" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Home</a>
-                    <a href="/#features" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Features</a>
-                    <a href="/#pricing" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
-                    <a href="/about" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>About</a>
-                    <a href="/login" className="px-6 py-2 mt-2 font-semibold text-center text-white transition bg-pink-500 rounded-full hover:bg-pink-600">LOG IN</a>
-                </div>
-            )}
+            <Navigation />
 
             {/* Back to Home Button */}
             <div className="px-6 py-4 bg-gray-50">

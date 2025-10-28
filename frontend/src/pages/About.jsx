@@ -1,21 +1,17 @@
-import { useState } from 'react';
-import { ArrowLeft, Heart, Target, Users, Award, Zap, Globe, TrendingUp, Menu, X, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Heart, Target, Users, Award, Zap, Globe, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import Navigation from '../components/Navigation';
 
 export default function AboutPage() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
     const navigate = useNavigate();
 
-    const categories = ['Workout Plans', 'Nutrition Guide', 'Exercise Library', 'Progress Tracker', 'Community Forum', 'Blog Articles'];
-
     const teamMembers = [
-        { name: 'Sarah Johnson', role: 'CEO & Founder', image: '👩‍💼', bio: 'Former Olympic athlete with 15 years of fitness industry experience' },
-        { name: 'Mike Chen', role: 'Head of Training', image: '👨‍🏫', bio: 'Certified personal trainer specializing in strength and conditioning' },
-        { name: 'Emma Williams', role: 'Nutrition Expert', image: '👩‍⚕️', bio: 'Registered dietitian with expertise in sports nutrition' },
-        { name: 'David Martinez', role: 'Tech Lead', image: '👨‍💻', bio: 'Building innovative fitness technology for 10+ years' },
-        { name: 'Lisa Anderson', role: 'Community Manager', image: '👩‍🦰', bio: 'Passionate about building supportive fitness communities' },
-        { name: 'James Taylor', role: 'Fitness Coach', image: '👨‍🦱', bio: 'Specializes in HIIT and functional training programs' }
+        { name: 'Chaminda Rajapaksa', role: 'CEO & Founder', image: '/team-1.jpg', bio: 'Former national athlete turned fitness entrepreneur. Chaminda founded Fitness Sharks with a vision to make premium fitness accessible to all Sri Lankans.' },
+        { name: 'Kasun Perera', role: 'Chief Technology Officer', image: '/team-2.webp', bio: 'Tech innovator with 15+ years in fitness technology. Kasun leads our digital transformation and mobile app development initiatives.' },
+        { name: 'Sanduni Fernando', role: 'Head of Operations', image: '/team-3.webp', bio: 'Operations expert ensuring smooth daily operations across all Sri Lankan locations. Sanduni brings 12 years of fitness industry experience.' },
+        { name: 'Nuwan Silva', role: 'Head of Training', image: '/team-4.png', bio: 'Certified master trainer and fitness education specialist. Nuwan develops our training programs and certifies our trainers nationwide.' },
+        { name: 'Dilani Wickramasinghe', role: 'Community Manager', image: '/team-5.jpg', bio: 'Passionate about building supportive fitness communities across Sri Lanka and connecting members with their fitness goals.' },
+        { name: 'Pradeep Jayawardena', role: 'Fitness Coach', image: '/team-6.avif', bio: 'Specializes in HIIT and functional training programs. Expert in designing personalized workout plans for all fitness levels.' }
     ];
 
     const milestones = [
@@ -49,69 +45,7 @@ export default function AboutPage() {
 
     return (
         <div className="min-h-screen font-sans bg-white">
-            {/* Navbar */}
-            <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 text-white shadow-2xl bg-gradient-to-r from-blue-700 to-blue-900">
-                <div className="flex items-center gap-2 text-2xl font-extrabold tracking-wide">
-                    <span className="text-pink-400">🦈</span> Fitness Sharks
-                </div>
-
-                <div className="items-center hidden gap-8 text-lg font-medium md:flex">
-                    <a href="#features" className="transition duration-300 hover:text-pink-300">Features</a>
-                    <a href="#dashboard" className="transition duration-300 hover:text-pink-300">Dashboard</a>
-                    <a href="#pricing" className="transition duration-300 hover:text-pink-300">Pricing</a>
-
-                    <div className="relative">
-                        <button onClick={() => setMoreDropdownOpen(!moreDropdownOpen)} className="flex items-center gap-1 transition duration-300 hover:text-pink-300">
-                            More <ChevronDown size={20} className={`transition-transform ${moreDropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
-                        </button>
-
-                        {moreDropdownOpen && (
-                            <div className="absolute right-0 w-56 mt-2 overflow-hidden bg-white rounded-lg shadow-2xl top-full">
-                                <div className="py-2">
-                                    {categories.map((category, idx) => (
-                                        <button key={idx} onClick={() => { handlePlaceholderClick(); setMoreDropdownOpen(false); }} className="block w-full px-4 py-2 text-left text-gray-700 transition hover:bg-pink-50 hover:text-pink-600">
-                                            {category}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    <a href="#contact" className="transition duration-300 hover:text-pink-300">Contact</a>
-                </div>
-
-                <button onClick={handlePlaceholderClick} className="hidden px-6 py-2 font-bold text-white transition transform bg-pink-500 rounded-full shadow-lg md:block hover:bg-pink-600 hover:scale-105">
-                    LOG IN
-                </button>
-
-                <button className="p-2 transition rounded-lg md:hidden hover:bg-blue-800" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                    {mobileMenuOpen ? <X size={28} className="text-pink-300" /> : <Menu size={28} className="text-pink-300" />}
-                </button>
-            </nav>
-
-            {/* Mobile Menu */}
-            {mobileMenuOpen && (
-                <div className="relative z-40 flex flex-col gap-4 p-4 text-white bg-blue-900 shadow-xl md:hidden">
-                    <a href="#features" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Features</a>
-                    <a href="#dashboard" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Dashboard</a>
-                    <a href="#pricing" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
-
-                    <div className="pt-2 border-t border-blue-700">
-                        <p className="px-2 mb-2 text-sm font-semibold text-pink-300">More Categories</p>
-                        {categories.map((category, idx) => (
-                            <button key={idx} onClick={() => { handlePlaceholderClick(); setMobileMenuOpen(false); }} className="block w-full px-2 py-2 text-left transition rounded hover:text-pink-300">
-                                {category}
-                            </button>
-                        ))}
-                    </div>
-
-                    <a href="#contact" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Contact</a>
-                    <button onClick={() => { setMobileMenuOpen(false); handlePlaceholderClick(); }} className="px-6 py-2 mt-2 font-semibold text-white transition bg-pink-500 rounded-full hover:bg-pink-600">
-                        LOG IN
-                    </button>
-                </div>
-            )}
+            <Navigation />
 
             {/* Back to Home Button */}
             <div className="px-6 py-4 bg-gray-50">
@@ -245,7 +179,20 @@ export default function AboutPage() {
                     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                         {teamMembers.map((member, index) => (
                             <div key={index} className="p-6 text-center bg-white shadow-lg rounded-2xl hover:shadow-2xl transition">
-                                <div className="flex justify-center mb-4 text-7xl">{member.image}</div>
+                                <div className="flex justify-center mb-4">
+                                    <img 
+                                        src={member.image} 
+                                        alt={member.name}
+                                        className="w-32 h-32 object-cover rounded-full border-4 border-gradient-to-r from-pink-500 to-purple-600 shadow-lg"
+                                        onError={(e) => {
+                                            e.target.style.display = 'none';
+                                            e.target.nextSibling.style.display = 'flex';
+                                        }}
+                                    />
+                                    <div className="w-32 h-32 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg" style={{display: 'none'}}>
+                                        {member.name.split(' ').map(n => n[0]).join('')}
+                                    </div>
+                                </div>
                                 <h3 className="mb-2 text-2xl font-bold text-blue-900">{member.name}</h3>
                                 <p className="mb-4 text-lg font-semibold text-pink-600">{member.role}</p>
                                 <p className="text-gray-600">{member.bio}</p>
