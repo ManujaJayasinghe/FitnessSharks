@@ -134,22 +134,18 @@ export default function AuthPage({ defaultMode }) {
             navigate('/');
           }
         } else {
-          // Simulate signup process
+          // Simulate signup process - only allow member signup
           await new Promise(resolve => setTimeout(resolve, 1000));
           const userData = signup({
             email: formData.email,
             password: formData.password,
             fullName: formData.fullName,
             phone: formData.phone,
-            userType: formData.userType
+            userType: 'member' // Force member type for signup
           });
           console.log('Account created successfully:', userData);
-          // Redirect based on user type
-          if (formData.userType === 'admin') {
-            navigate('/admin-dashboard');
-          } else {
-            navigate('/');
-          }
+          // Always redirect to home for new member signups
+          navigate('/');
         }
       } catch (error) {
         console.error('Authentication error:', error);
@@ -204,38 +200,50 @@ export default function AuthPage({ defaultMode }) {
             {/* User Type Selection */}
             <div>
               <label className="block mb-3 text-sm font-semibold text-gray-700">
-                Login as
+                {isLogin ? 'Login as' : 'Sign up as'}
               </label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setFormData({ ...formData, userType: 'member' })}
-                  className={`p-4 rounded-xl border-2 transition-all ${formData.userType === 'member'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="text-2xl">🦈</div>
-                    <div className="font-semibold">Member</div>
-                    <div className="text-xs text-gray-500">Fitness Sharks Member</div>
+              {isLogin ? (
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, userType: 'member' })}
+                    className={`p-4 rounded-xl border-2 transition-all ${formData.userType === 'member'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="text-2xl">🦈</div>
+                      <div className="font-semibold">Member</div>
+                      <div className="text-xs text-gray-500">Fitness Sharks Member</div>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, userType: 'admin' })}
+                    className={`p-4 rounded-xl border-2 transition-all ${formData.userType === 'admin'
+                      ? 'border-purple-500 bg-purple-50 text-purple-700'
+                      : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="text-2xl">👑</div>
+                      <div className="font-semibold">Admin</div>
+                      <div className="text-xs text-gray-500">Administrator</div>
+                    </div>
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="p-4 rounded-xl border-2 border-blue-500 bg-blue-50 text-blue-700">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="text-2xl">🦈</div>
+                      <div className="font-semibold">Member</div>
+                      <div className="text-xs text-gray-500">Join as a Fitness Sharks Member</div>
+                    </div>
                   </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFormData({ ...formData, userType: 'admin' })}
-                  className={`p-4 rounded-xl border-2 transition-all ${formData.userType === 'admin'
-                    ? 'border-purple-500 bg-purple-50 text-purple-700'
-                    : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="text-2xl">👑</div>
-                    <div className="font-semibold">Admin</div>
-                    <div className="text-xs text-gray-500">Administrator</div>
-                  </div>
-                </button>
-              </div>
+                </div>
+              )}
             </div>
             {/* Full Name - Signup Only */}
             {!isLogin && (
@@ -501,7 +509,13 @@ export default function AuthPage({ defaultMode }) {
               {isLogin ? "Don't have an account? " : "Already have an account? "}
               <button
                 type="button"
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  // When switching to signup mode, force userType to 'member'
+                  if (isLogin) {
+                    setFormData({ ...formData, userType: 'member' });
+                  }
+                }}
                 className="font-bold text-blue-600 hover:text-blue-700"
               >
                 {isLogin ? 'Sign Up' : 'Login'}
