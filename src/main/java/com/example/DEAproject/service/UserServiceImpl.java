@@ -6,6 +6,7 @@ import com.example.DEAproject.model.User;
 import com.example.DEAproject.repository.RoleRepository;
 import com.example.DEAproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public User registerUser(UserDTO userDTO, String roleName) {
         if(userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
@@ -32,7 +36,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword()); // plain text
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // ENCODED
 
         Role role = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
@@ -43,9 +47,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> loginUser(String username, String password) {
-        // Plain text comparison
         return userRepository.findByUsername(username)
-                .filter(user -> user.getPassword().equals(password));
+                .filter(user -> passwordEncoder.matches(password, user.getPassword())); // MATCH ENCODED
     }
 
     @Override
