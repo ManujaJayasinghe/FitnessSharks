@@ -19,6 +19,8 @@ public class UserDTO {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
+    private String phone;
+
     // Constructors
     public UserDTO() {}
 
@@ -37,4 +39,7 @@ public class UserDTO {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 }

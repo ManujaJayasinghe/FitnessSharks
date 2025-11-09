@@ -32,9 +32,14 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public Trainer updateTrainer(Long id, Trainer trainer) {
         return trainerRepository.findById(id).map(existing -> {
-            existing.setName(trainer.getName());
-            existing.setSpecialization(trainer.getSpecialization());
-            existing.setExperienceYears(trainer.getExperienceYears());
+            if (trainer.getName() != null) existing.setName(trainer.getName());
+            if (trainer.getSpecialization() != null) existing.setSpecialization(trainer.getSpecialization());
+            if (trainer.getEmail() != null) existing.setEmail(trainer.getEmail());
+            if (trainer.getPhone() != null) existing.setPhone(trainer.getPhone());
+            if (trainer.getDescription() != null) existing.setDescription(trainer.getDescription());
+            if (trainer.getExperience() != null) existing.setExperience(trainer.getExperience());
+            if (trainer.getPhotoPath() != null) existing.setPhotoPath(trainer.getPhotoPath());
+            if (trainer.getPhoto() != null) existing.setPhoto(trainer.getPhoto());
             return trainerRepository.save(existing);
         }).orElseThrow(() -> new RuntimeException("Trainer not found with id " + id));
     }
@@ -44,4 +49,3 @@ public class TrainerServiceImpl implements TrainerService {
         trainerRepository.deleteById(id);
     }
 }
-

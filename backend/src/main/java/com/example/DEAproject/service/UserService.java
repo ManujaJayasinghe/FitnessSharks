@@ -10,4 +10,5 @@ public interface UserService {
     User registerUser(UserDTO userDTO, String roleName);
     Optional<User> loginUser(String username, String password);
     List<User> getAllUsers();
+    void deleteUser(Long id);
 }

@@ -1,6 +1,7 @@
 package com.example.DEAproject.controller;
 
 import com.example.DEAproject.dto.UserDTO;
+import com.example.DEAproject.model.Role;
 import com.example.DEAproject.model.User;
 import com.example.DEAproject.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
@@ -21,24 +23,24 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Sign up
+    // Sign up (public)
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(
             @Valid @RequestBody UserDTO userDTO,
-            @RequestParam(defaultValue = "CUSTOMER") String role // default role CUSTOMER
+            @RequestParam(defaultValue = "CUSTOMER") String role
     ) {
         User savedUser = userService.registerUser(userDTO, role);
         return ResponseEntity.ok(savedUser);
     }
 
-    // Login with session
+    // Login
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO, HttpSession session) {
         Optional<User> user = userService.loginUser(userDTO.getUsername(), userDTO.getPassword());
 
         if (user.isPresent()) {
-            // Store username in session
             session.setAttribute("loggedUser", user.get().getUsername());
+            session.setAttribute("roles", user.get().getRoles());
             return ResponseEntity.ok("Login successful, session created!");
         } else {
             return ResponseEntity.status(401).body("Invalid username or password");
@@ -63,9 +65,32 @@ public class UserController {
         return ResponseEntity.ok("Logged out successfully, session destroyed!");
     }
 
-    // Get all users
+    // Admin-only: Get all users
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers(HttpSession session) {
+        if (!isAdmin(session)) return ResponseEntity.status(403).build();
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    // Admin-only: Delete user
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, HttpSession session) {
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(403).body(java.util.Map.of("error", "Admin access required"));
+        }
+        
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok(java.util.Map.of("message", "User deleted successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(java.util.Map.of("error", "User not found"));
+        }
+    }
+
+    // Helper: check if session user is admin
+    private boolean isAdmin(HttpSession session) {
+        Set<Role> roles = (Set<Role>) session.getAttribute("roles");
+        if (roles == null) return false;
+        return roles.stream().anyMatch(role -> "ADMIN".equals(role.getName()));
     }
 }

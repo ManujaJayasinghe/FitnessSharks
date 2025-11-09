@@ -1,59 +1,36 @@
+
 package com.example.DEAproject.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "trainers")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Trainer {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+    
     private String specialization;
-    private int experienceYears;
+    
+    private String email;
+    
+    private String phone;
+    
+    @Column(length = 1000)
+    private String description;
+    
+    private Integer experience;
 
-    // Constructors
-    public Trainer() {
-    }
-
-    public Trainer(String name, String specialization, int experienceYears) {
-        this.name = name;
-        this.specialization = specialization;
-        this.experienceYears = experienceYears;
-    }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
-
-    public int getExperienceYears() {
-        return experienceYears;
-    }
-
-    public void setExperienceYears(int experienceYears) {
-        this.experienceYears = experienceYears;
-    }
+    @Column(name = "photo_path")
+    private String photoPath;
+    
+    private String photo; // For base64 or URL
 }
