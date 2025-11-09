@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { Menu, X, ChevronDown, Search, MessageCircle, ThumbsUp, User, Clock, TrendingUp, Users, Award, Send, ArrowLeft } from 'lucide-react';
+import { Search, MessageCircle, ThumbsUp, User, Clock, TrendingUp, Users, Award, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import SharedNavigation from '../components/SharedNavigation';
 
 export default function CommunityForum() {
   const navigate = useNavigate();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Topics');
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [newComment, setNewComment] = useState('');
+  const [forumTopics, setForumTopics] = useState([]);
 
   const categories = [
     'All Topics',
@@ -23,16 +23,15 @@ export default function CommunityForum() {
     'Motivation'
   ];
 
-  const menuCategories = [
-    'Workout Plans',
-    'Nutrition Guide',
-    'Exercise Library',
-    'Progress Tracker',
-    'Community Forum',
-    'Blog Articles',
-  ];
 
-  const forumTopics = [
+
+  // Initialize forum topics from localStorage or default data
+  useState(() => {
+    const savedTopics = localStorage.getItem('forumTopics');
+    if (savedTopics) {
+      setForumTopics(JSON.parse(savedTopics));
+    } else {
+      const defaultTopics = [
     {
       id: 1,
       category: 'Workout Tips',
@@ -164,7 +163,11 @@ export default function CommunityForum() {
         { author: 'CyclePro', avatar: 'CP', time: '1 day ago', text: 'Cycling is easier on the joints and you can go further. Both are great though!' }
       ]
     }
-  ];
+      ];
+      setForumTopics(defaultTopics);
+      localStorage.setItem('forumTopics', JSON.stringify(defaultTopics));
+    }
+  }, []);
 
   const communityStats = [
     { icon: <Users className="w-8 h-8" />, number: '25,000+', label: 'Active Members' },
@@ -189,94 +192,32 @@ export default function CommunityForum() {
 
   const handleAddComment = (topicId) => {
     if (newComment.trim()) {
-      console.log(`Adding comment to topic ${topicId}: ${newComment}`);
-      alert('Please log in to post comments!');
+      const updatedTopics = forumTopics.map(topic => {
+        if (topic.id === topicId) {
+          const newCommentObj = {
+            author: 'You',
+            avatar: 'YU',
+            time: 'Just now',
+            text: newComment
+          };
+          return {
+            ...topic,
+            comments: [...topic.comments, newCommentObj],
+            replies: topic.replies + 1
+          };
+        }
+        return topic;
+      });
+      
+      setForumTopics(updatedTopics);
+      localStorage.setItem('forumTopics', JSON.stringify(updatedTopics));
       setNewComment('');
     }
   };
 
   return (
     <div className="min-h-screen font-sans bg-gray-50">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 text-white shadow-2xl bg-gradient-to-r from-blue-700 to-blue-900">
-        <div className="flex items-center gap-2 text-2xl font-extrabold tracking-wide cursor-pointer min-w-0 flex-shrink-0">
-          <span className="text-pink-400">🦈</span> 
-          <span className="whitespace-nowrap">Fitness Sharks</span>
-        </div>
-        
-        {/* Desktop Menu */}
-        <div className="items-center hidden gap-8 text-lg font-medium md:flex">
-          <a href="#home" className="transition duration-300 hover:text-pink-300">Home</a>
-          <a href="#exercise" className="transition duration-300 hover:text-pink-300">Exercise Library</a>
-          
-          {/* More Dropdown */}
-          <div className="relative">
-            <button 
-              onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
-              className="flex items-center gap-1 transition duration-300 hover:text-pink-300"
-            >
-              More <ChevronDown size={20} className={`transition-transform ${moreDropdownOpen ? 'rotate-180' : 'rotate-0'}`}/>
-            </button>
-            
-            {moreDropdownOpen && (
-              <div className="absolute right-0 w-56 mt-2 overflow-hidden bg-white rounded-lg shadow-2xl top-full">
-                <div className="py-2">
-                  {menuCategories.map((category, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        handlePlaceholderClick();
-                        console.log(`Clicked: ${category}`);
-                        setMoreDropdownOpen(false);
-                      }}
-                      className="block w-full px-4 py-2 text-left text-gray-700 transition hover:bg-pink-50 hover:text-pink-600"
-                    >
-                      {category}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <button 
-          onClick={() => navigate('/login')}
-          className="hidden px-6 py-2 font-bold text-white transition transform bg-pink-500 rounded-full shadow-lg md:block hover:bg-pink-600 hover:scale-105"
-        >
-          LOG IN
-        </button>
-
-        {/* Mobile Menu Button */}
-        <button 
-          className="p-2 transition rounded-lg md:hidden hover:bg-blue-800" 
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X size={28} className="text-pink-300" /> : <Menu size={28} className="text-pink-300" />}
-        </button>
-      </nav>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="relative z-40 flex flex-col gap-4 p-4 text-white bg-blue-900 shadow-xl md:hidden">
-          <a href="#home" className="p-2 text-left transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Home</a>
-          <a href="#exercise" className="p-2 text-left transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Exercise Library</a>
-          <button onClick={() => { navigate('/login'); setMobileMenuOpen(false); }} className="px-6 py-2 mt-2 font-semibold text-white transition bg-pink-500 rounded-full hover:bg-pink-600">LOG IN</button>
-        </div>
-      )}
-
-      {/* Back to Home Button */}
-      <div className="px-6 py-4 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:text-blue-800 transition font-semibold"
-          >
-            <ArrowLeft size={20} />
-            Back to Home
-          </button>
-        </div>
-      </div>
+      <SharedNavigation title="Community Forum" />
 
       {/* Hero Section */}
       <section className="px-6 py-16 text-center text-white bg-gradient-to-r from-blue-600 to-blue-900">

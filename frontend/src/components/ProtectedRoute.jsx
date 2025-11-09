@@ -8,17 +8,23 @@ export default function ProtectedRoute({ children, requireAdmin = false }) {
 
   useEffect(() => {
     if (!isLoading) {
+      console.log('ProtectedRoute - Auth check:', { isAuthenticated, user, requireAdmin });
+      
       if (!isAuthenticated) {
         // Not logged in, redirect to login
+        console.log('ProtectedRoute - Not authenticated, redirecting to login');
         navigate('/login');
         return;
       }
 
       if (requireAdmin && user?.userType !== 'admin') {
         // Not an admin, redirect to home
+        console.log('ProtectedRoute - Not admin, redirecting to home. User type:', user?.userType);
         navigate('/');
         return;
       }
+      
+      console.log('ProtectedRoute - Access granted');
     }
   }, [isAuthenticated, user, isLoading, requireAdmin, navigate]);
 

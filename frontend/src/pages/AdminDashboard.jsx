@@ -22,6 +22,8 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import UserManagement from '../components/UserManagement';
+import GymManagement from '../components/GymManagement';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -149,12 +151,12 @@ export default function AdminDashboard() {
                 Revenue
               </button>
               <button
-                onClick={() => setActiveTab('trainers')}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition ${activeTab === 'trainers' ? 'bg-purple-100 text-purple-700' : 'text-gray-600 hover:bg-gray-100'
+                onClick={() => setActiveTab('gym')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition ${activeTab === 'gym' ? 'bg-purple-100 text-purple-700' : 'text-gray-600 hover:bg-gray-100'
                   }`}
               >
-                <Users size={20} />
-                Trainers
+                <Activity size={20} />
+                Gym Management
               </button>
               <button
                 onClick={() => setActiveTab('messages')}
@@ -293,94 +295,11 @@ export default function AdminDashboard() {
           )}
 
           {activeTab === 'members' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">Member Management</h2>
-                <button className="flex items-center gap-2 px-4 py-2 text-white transition bg-purple-600 rounded-lg hover:bg-purple-700">
-                  <Plus size={16} />
-                  Add Member
-                </button>
-              </div>
+            <UserManagement />
+          )}
 
-              {/* Search and Filters */}
-              <div className="p-4 bg-white border shadow-sm rounded-xl">
-                <div className="flex items-center gap-4">
-                  <div className="relative flex-1">
-                    <Search className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" size={16} />
-                    <input
-                      type="text"
-                      placeholder="Search members..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full py-2 pl-10 pr-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    />
-                  </div>
-                  <button className="flex items-center gap-2 px-4 py-2 transition border border-gray-300 rounded-lg hover:bg-gray-50">
-                    <Filter size={16} />
-                    Filter
-                  </button>
-                  <button className="flex items-center gap-2 px-4 py-2 transition border border-gray-300 rounded-lg hover:bg-gray-50">
-                    <Download size={16} />
-                    Export
-                  </button>
-                </div>
-              </div>
-
-              {/* Members Table */}
-              <div className="overflow-hidden bg-white border shadow-sm rounded-xl">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Member</th>
-                        <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Plan</th>
-                        <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status</th>
-                        <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Joined</th>
-                        <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {recentMembers.map((member) => (
-                        <tr key={member.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div>
-                              <div className="text-sm font-medium text-gray-900">{member.name}</div>
-                              <div className="text-sm text-gray-500">{member.email}</div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
-                              {member.plan}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(member.status)}`}>
-                              {member.status}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                            {member.joined}
-                          </td>
-                          <td className="px-6 py-4 text-sm font-medium whitespace-nowrap">
-                            <div className="flex items-center gap-2">
-                              <button className="text-blue-600 hover:text-blue-900">
-                                <Eye size={16} />
-                              </button>
-                              <button className="text-green-600 hover:text-green-900">
-                                <Edit size={16} />
-                              </button>
-                              <button className="text-red-600 hover:text-red-900">
-                                <Trash2 size={16} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+          {activeTab === 'gym' && (
+            <GymManagement />
           )}
 
           {/* Analytics Tab */}

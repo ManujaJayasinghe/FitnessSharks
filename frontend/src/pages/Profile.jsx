@@ -12,7 +12,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
       <header className="sticky top-0 z-50 px-6 py-4 text-white shadow-2xl bg-gradient-to-r from-blue-700 to-blue-900">
         <div className="flex items-center justify-between mx-auto max-w-7xl">
           <div className="flex items-center gap-3">
@@ -30,40 +30,40 @@ export default function Profile() {
 
       <main className="px-6 py-12">
         <div className="mx-auto max-w-3xl">
-          <div className="p-8 bg-white shadow-xl rounded-2xl">
+          <div className="p-8 bg-white dark:bg-gray-800 shadow-xl rounded-2xl transition-colors duration-300">
             <div className="flex items-center gap-4 mb-6">
               <div className="flex items-center justify-center w-16 h-16 font-bold text-blue-900 bg-pink-300 rounded-full text-2xl">
-                {(user?.fullName || user?.email || 'U').slice(0, 1).toUpperCase()}
+                {(user?.username || user?.email || 'U').slice(0, 1).toUpperCase()}
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-blue-900">{user?.fullName || user?.email}</h2>
-                <p className="text-gray-600">Member since {new Date(user?.signupTime || user?.loginTime).toLocaleDateString()}</p>
+                <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-400">{user?.username || user?.email}</h2>
+                <p className="text-gray-600 dark:text-gray-400">Member since {new Date(user?.signupTime || user?.loginTime).toLocaleDateString()}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="p-4 bg-blue-50 rounded-xl">
-                <div className="text-sm font-semibold text-blue-700">Full Name</div>
-                <div className="text-lg font-bold text-blue-900">{user?.fullName || '—'}</div>
+              <div className="p-4 bg-blue-50 dark:bg-gray-700 rounded-xl transition-colors duration-300">
+                <div className="text-sm font-semibold text-blue-700 dark:text-blue-400">Username</div>
+                <div className="text-lg font-bold text-blue-900 dark:text-white">{user?.username || '—'}</div>
               </div>
-              <div className="p-4 bg-blue-50 rounded-xl">
-                <div className="text-sm font-semibold text-blue-700">Email</div>
-                <div className="text-lg font-bold text-blue-900">{user?.email}</div>
+              <div className="p-4 bg-blue-50 dark:bg-gray-700 rounded-xl transition-colors duration-300">
+                <div className="text-sm font-semibold text-blue-700 dark:text-blue-400">Email</div>
+                <div className="text-lg font-bold text-blue-900 dark:text-white">{user?.email || '—'}</div>
               </div>
-              <div className="p-4 bg-blue-50 rounded-xl">
-                <div className="text-sm font-semibold text-blue-700">Phone</div>
-                <div className="text-lg font-bold text-blue-900">{user?.phone || '—'}</div>
+              <div className="p-4 bg-blue-50 dark:bg-gray-700 rounded-xl transition-colors duration-300">
+                <div className="text-sm font-semibold text-blue-700 dark:text-blue-400">Phone Number</div>
+                <div className="text-lg font-bold text-blue-900 dark:text-white">{user?.phone || '—'}</div>
               </div>
-              <div className="p-4 bg-blue-50 rounded-xl">
-                <div className="text-sm font-semibold text-blue-700">Last Login</div>
-                <div className="text-lg font-bold text-blue-900">{user?.loginTime ? new Date(user.loginTime).toLocaleString() : '—'}</div>
+              <div className="p-4 bg-blue-50 dark:bg-gray-700 rounded-xl transition-colors duration-300">
+                <div className="text-sm font-semibold text-blue-700 dark:text-blue-400">Last Login</div>
+                <div className="text-lg font-bold text-blue-900 dark:text-white">{user?.loginTime ? new Date(user.loginTime).toLocaleString() : '—'}</div>
               </div>
             </div>
           </div>
 
           {/* Purchases Section */}
-          <div className="mt-8 p-8 bg-white shadow-xl rounded-2xl">
-            <h3 className="text-2xl font-bold text-blue-900 mb-6">My Purchases</h3>
+          <div className="mt-8 p-8 bg-white dark:bg-gray-800 shadow-xl rounded-2xl transition-colors duration-300">
+            <h3 className="text-2xl font-bold text-blue-900 dark:text-blue-400 mb-6">My Purchases & Subscriptions</h3>
             
             {user?.purchases && user.purchases.length > 0 ? (
               <div className="space-y-4">
@@ -140,6 +140,60 @@ export default function Profile() {
               </div>
             )}
           </div>
+
+          {/* Activated Training Plans Section */}
+          {user?.purchases && Array.isArray(user.purchases) && user.purchases.some(p => p && p.type === 'membership' && p.trainingPlan) && (
+            <div className="mt-8 p-8 bg-white shadow-xl rounded-2xl">
+              <h3 className="text-2xl font-bold text-blue-900 mb-6">🏋️ Activated Training Plans</h3>
+              
+              <div className="space-y-4">
+                {user.purchases
+                  .filter(p => p && p.type === 'membership' && p.trainingPlan)
+                  .map((purchase) => (
+                    <div key={purchase.id} className="p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border-l-4 border-green-500">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="text-xl font-bold text-blue-900">{purchase.trainingPlan}</h4>
+                        <span className="px-3 py-1 text-sm font-semibold text-green-700 bg-green-100 rounded-full">
+                          Active
+                        </span>
+                      </div>
+                      
+                      <p className="text-gray-600 mb-3">
+                        Included with your {purchase.name} membership
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <div className="text-sm font-semibold text-gray-600">Activated On</div>
+                          <div className="text-lg font-bold text-blue-900">
+                            {new Date(purchase.purchaseDate).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm font-semibold text-gray-600">Membership</div>
+                          <div className="text-lg font-bold text-blue-900">{purchase.name}</div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex gap-3">
+                        <button 
+                          onClick={() => navigate('/workout-plans')}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                        >
+                          View Plan Details
+                        </button>
+                        <button 
+                          onClick={() => navigate('/trainers')}
+                          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                        >
+                          Meet Your Trainer
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>

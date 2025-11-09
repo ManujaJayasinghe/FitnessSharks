@@ -175,15 +175,15 @@ export default function CareersPage() {
     ];
 
     return (
-        <div className="min-h-screen font-sans bg-white">
+        <div className="min-h-screen font-sans bg-white dark:bg-gray-900 transition-colors duration-300">
             <Navigation />
 
             {/* Back to Home Button */}
-            <div className="px-6 py-4 bg-gray-50">
+            <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto">
                     <button
                         onClick={() => navigate('/')}
-                        className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:text-blue-800 transition font-semibold"
+                        className="flex items-center gap-2 px-4 py-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition font-semibold"
                     >
                         <ArrowLeft size={20} />
                         Back to Home
@@ -210,19 +210,19 @@ export default function CareersPage() {
             </section>
 
             {/* Why Join Us */}
-            <section className="px-6 py-20 bg-white">
+            <section className="px-6 py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
                 <div className="max-w-6xl mx-auto">
-                    <h2 className="mb-4 text-4xl font-bold text-center text-blue-900">Why Work With Us?</h2>
-                    <p className="mb-12 text-xl text-center text-gray-600">More than just a job - it is a lifestyle</p>
+                    <h2 className="mb-4 text-4xl font-bold text-center text-blue-900 dark:text-blue-400">Why Work With Us?</h2>
+                    <p className="mb-12 text-xl text-center text-gray-600 dark:text-gray-300">More than just a job - it is a lifestyle</p>
 
                     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                         {benefits.map((benefit, idx) => (
-                            <div key={idx} className="p-6 transition duration-300 bg-slate-50 rounded-2xl hover:shadow-xl hover:-translate-y-1">
+                            <div key={idx} className="p-6 transition duration-300 bg-slate-50 dark:bg-gray-800 rounded-2xl hover:shadow-xl hover:-translate-y-1">
                                 <div className="flex items-center justify-center w-12 h-12 mb-4 text-pink-500 bg-pink-100 rounded-full">
                                     {benefit.icon}
                                 </div>
-                                <h3 className="mb-2 text-xl font-bold text-blue-900">{benefit.title}</h3>
-                                <p className="text-gray-600">{benefit.desc}</p>
+                                <h3 className="mb-2 text-xl font-bold text-blue-900 dark:text-blue-400">{benefit.title}</h3>
+                                <p className="text-gray-600 dark:text-gray-300">{benefit.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -230,16 +230,16 @@ export default function CareersPage() {
             </section>
 
             {/* Our Values */}
-            <section className="px-6 py-20 bg-slate-50">
+            <section className="px-6 py-20 bg-slate-50 dark:bg-gray-800 transition-colors duration-300">
                 <div className="max-w-6xl mx-auto">
-                    <h2 className="mb-4 text-4xl font-bold text-center text-blue-900">Our Core Values</h2>
-                    <p className="mb-12 text-xl text-center text-gray-600">What drives us every day</p>
+                    <h2 className="mb-4 text-4xl font-bold text-center text-blue-900 dark:text-blue-400">Our Core Values</h2>
+                    <p className="mb-12 text-xl text-center text-gray-600 dark:text-gray-300">What drives us every day</p>
 
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                         {values.map((value, idx) => (
-                            <div key={idx} className="p-6 text-center transition duration-300 bg-white border-t-4 border-pink-500 shadow-lg rounded-2xl hover:shadow-xl">
-                                <h3 className="mb-3 text-xl font-bold text-blue-900">{value.title}</h3>
-                                <p className="text-gray-600">{value.desc}</p>
+                            <div key={idx} className="p-6 text-center transition duration-300 bg-white dark:bg-gray-700 border-t-4 border-pink-500 shadow-lg rounded-2xl hover:shadow-xl">
+                                <h3 className="mb-3 text-xl font-bold text-blue-900 dark:text-blue-400">{value.title}</h3>
+                                <p className="text-gray-600 dark:text-gray-300">{value.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -247,7 +247,7 @@ export default function CareersPage() {
             </section>
 
             {/* Job Openings */}
-            <section id="openings" className="px-6 py-20 bg-white">
+            <section id="openings" className="px-6 py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="mb-4 text-4xl font-bold text-center text-blue-900">Open Positions</h2>
                     <p className="mb-12 text-xl text-center text-gray-600">Find your perfect role</p>
@@ -298,7 +298,7 @@ export default function CareersPage() {
                                         className="flex items-center gap-2 px-6 py-3 font-semibold text-white transition bg-pink-500 rounded-full hover:bg-pink-600"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            alert('Application form would open here. Integration with your application system needed.');
+                                            navigate(`/career-application/${job.id}`);
                                         }}
                                     >
                                         Apply Now <ArrowRight size={18} />
@@ -346,21 +346,7 @@ export default function CareersPage() {
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="px-6 py-20 text-center text-white bg-gradient-to-r from-pink-500 to-pink-700">
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="mb-6 text-4xl font-bold">Do not See Your Role?</h2>
-                    <p className="mb-8 text-xl">
-                        We are always looking for talented individuals. Send us your resume and we will keep you in mind for future opportunities.
-                    </p>
-                    <button
-                        onClick={() => alert('Contact form would open here')}
-                        className="px-10 py-4 text-xl font-bold text-pink-600 transition transform bg-white rounded-full shadow-2xl hover:bg-gray-100 hover:scale-105"
-                    >
-                        Send Your Resume
-                    </button>
-                </div>
-            </section>
+
 
             {/* Footer */}
             <footer className="px-6 py-12 text-white bg-slate-900">

@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, X, ChevronDown, Search, Facebook, Twitter, Instagram } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, Sun, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import apiService from '../services/apiService';
 
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -13,6 +15,24 @@ export default function HomePage() {
   const searchRef = useRef(null);
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+  const { isDarkMode, toggleTheme } = useTheme();
+  const [membershipPlans, setMembershipPlans] = useState([]);
+
+  // Load membership plans from backend
+  useEffect(() => {
+    const loadMembershipPlans = async () => {
+      try {
+        const result = await apiService.getAllMemberships();
+        if (result.success) {
+          setMembershipPlans(result.memberships);
+        }
+      } catch (error) {
+        console.error('Failed to load membership plans:', error);
+      }
+    };
+
+    loadMembershipPlans();
+  }, []);
 
   // Close search results when clicking outside
   useEffect(() => {
@@ -32,16 +52,14 @@ export default function HomePage() {
   const categories = [
     'Workout Plans',
     'Nutrition Guide',
-    'Exercise Library',
-    'Progress Tracker',
     'Community Forum',
-    'Blog Articles',
   ];
 
   // Comprehensive search data
   const searchData = [
     // Main Navigation
     { title: 'Features', type: 'section', target: '#features', description: 'Gym features and amenities' },
+    { title: 'Trainers', type: 'page', target: '/trainers', description: 'Meet our expert fitness trainers' },
     { title: 'Dashboard', type: 'section', target: '#dashboard', description: 'Personal fitness dashboard' },
     { title: 'Pricing', type: 'section', target: '#pricing', description: 'Membership plans and pricing' },
     { title: 'Contact', type: 'section', target: '#contact', description: 'Contact information and location' },
@@ -54,10 +72,10 @@ export default function HomePage() {
     { title: 'Tour Our Gym', type: 'page', target: '/tour-our-gym', description: 'Virtual tour of our facilities with photos and videos' },
     { title: 'Workout Plans', type: 'page', target: '/workout-plans', description: 'Personalized workout routines' },
     { title: 'Nutrition Guide', type: 'page', target: '/nutrition-guide', description: 'Diet and nutrition advice' },
-    { title: 'Exercise Library', type: 'page', target: '/exercise-library', description: 'Complete exercise database' },
-    { title: 'Progress Tracker', type: 'page', target: '/progress-tracker', description: 'Track your fitness progress' },
+    { title: 'Exercise Library', type: 'page', target: '/exercise-library', description: 'Complete exercise database with instructions' },
+
     { title: 'Community Forum', type: 'page', target: '/community-forum', description: 'Connect with other members' },
-    { title: 'Blog Articles', type: 'page', target: '/blog-articles', description: 'Fitness tips and articles' },
+    { title: 'Profile', type: 'page', target: '/profile', description: 'View your profile and subscriptions' },
 
     // Membership Plans
     { title: 'Day Pass', type: 'page', target: '/day-pass', description: 'Single day gym access' },
@@ -140,7 +158,17 @@ export default function HomePage() {
     { number: '50+', label: 'Expert Trainers' },
   ];
 
-  const pricingTiers = [
+  // Convert backend membership plans to pricing tiers format
+  const pricingTiers = membershipPlans.length > 0 ? membershipPlans.map((plan, index) => ({
+    id: plan.id,
+    name: plan.name,
+    price: `LKR ${plan.price.toLocaleString()}`,
+    period: `${plan.durationMonths} month${plan.durationMonths > 1 ? 's' : ''}`,
+    features: plan.description ? plan.description.split(',').map(f => f.trim()) : ['Full Gym Access', 'Professional Training', 'Modern Equipment'],
+    cta: `Join ${plan.name}`,
+    primary: index === 1 // Make the second plan primary
+  })) : [
+    // Fallback static plans if backend is not available
     {
       name: 'Day Pass',
       price: 'LKR 7,500',
@@ -181,7 +209,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen font-sans bg-white">
+    <div className="min-h-screen font-sans bg-white dark:bg-gray-900 transition-colors duration-300">
       <style>{`
         @keyframes fadeInDown {
           from {
@@ -199,7 +227,7 @@ export default function HomePage() {
       `}</style>
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 text-white shadow-2xl bg-gradient-to-r from-blue-700 to-blue-900">
+      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 text-white shadow-2xl bg-gradient-to-r from-blue-700 to-blue-900 dark:from-gray-800 dark:to-gray-900">
         <div className="flex items-center gap-2 text-2xl font-extrabold tracking-wide min-w-0 flex-shrink-0">
           <span className="text-pink-400">🦈</span>
           <span className="whitespace-nowrap">Fitness Sharks</span>
@@ -208,6 +236,7 @@ export default function HomePage() {
         {/* Desktop Menu */}
         <div className="items-center hidden gap-8 text-lg font-medium md:flex">
           <a href="#features" className="transition duration-300 hover:text-pink-300">Features</a>
+          <button onClick={() => navigate('/trainers')} className="transition duration-300 hover:text-pink-300">Trainers</button>
           <a href="#dashboard" className="transition duration-300 hover:text-pink-300">Dashboard</a>
           <a href="#pricing" className="transition duration-300 hover:text-pink-300">Pricing</a>
 
@@ -278,49 +307,63 @@ export default function HomePage() {
           </div>
         </div>
 
-        {isAuthenticated ? (
-          <div className="relative hidden md:block">
-            <button
-              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-              className="flex items-center gap-3 px-3 py-2 transition rounded-full hover:bg-blue-800"
-            >
-              <div className="flex items-center justify-center font-bold text-blue-900 bg-pink-300 rounded-full w-9 h-9">
-                {(user?.fullName || user?.email || 'U').slice(0, 1).toUpperCase()}
-              </div>
-              <span className="font-semibold">{user?.fullName || user?.email}</span>
-            </button>
-            {profileMenuOpen && (
-              <div className="absolute right-0 w-48 mt-2 overflow-hidden bg-white rounded-lg shadow-2xl">
-                <button
-                  className="block w-full px-4 py-2 text-left text-gray-700 transition hover:bg-gray-100"
-                  onClick={() => {
-                    setProfileMenuOpen(false);
-                    navigate('/profile');
-                  }}
-                >
-                  Profile
-                </button>
-                <button
-                  className="block w-full px-4 py-2 text-left text-gray-700 transition hover:bg-gray-100"
-                  onClick={() => {
-                    setProfileMenuOpen(false);
-                    logout();
-                    navigate('/');
-                  }}
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
+        <div className="flex items-center gap-4">
+          {/* Dark Mode Toggle */}
           <button
-            onClick={() => navigate('/login')}
-            className="hidden px-6 py-2 font-bold text-white transition transform bg-pink-500 rounded-full shadow-lg md:block hover:bg-pink-600 hover:scale-105"
+            onClick={() => {
+              console.log('Dark mode button clicked. Current state:', isDarkMode);
+              toggleTheme();
+            }}
+            className="p-2 transition duration-300 rounded-lg hover:bg-blue-800 border border-white/20"
+            title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           >
-            LOG IN
+            {isDarkMode ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} className="text-blue-200" />}
           </button>
-        )}
+
+          {isAuthenticated ? (
+            <div className="relative">
+              <button
+                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                className="flex items-center gap-2 px-2 py-2 transition rounded-full hover:bg-blue-800"
+              >
+                <div className="flex items-center justify-center font-bold text-blue-900 bg-pink-300 rounded-full w-9 h-9">
+                  {(user?.fullName || user?.username || 'U').slice(0, 1).toUpperCase()}
+                </div>
+                <ChevronDown size={16} className={`transition-transform ${profileMenuOpen ? 'rotate-180' : 'rotate-0'}`} />
+              </button>
+              {profileMenuOpen && (
+                <div className="absolute right-0 w-48 mt-2 overflow-hidden bg-white rounded-lg shadow-2xl">
+                  <button
+                    className="block w-full px-4 py-2 text-left text-gray-700 transition hover:bg-gray-100"
+                    onClick={() => {
+                      setProfileMenuOpen(false);
+                      navigate('/profile');
+                    }}
+                  >
+                    Profile
+                  </button>
+                  <button
+                    className="block w-full px-4 py-2 text-left text-gray-700 transition hover:bg-gray-100"
+                    onClick={() => {
+                      setProfileMenuOpen(false);
+                      logout();
+                      navigate('/');
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => navigate('/login')}
+              className="px-6 py-2 font-bold text-white transition transform bg-pink-500 rounded-full shadow-lg hover:bg-pink-600 hover:scale-105"
+            >
+              LOG IN
+            </button>
+          )}
+        </div>
 
         {/* Mobile Menu Button */}
         <button
@@ -336,9 +379,18 @@ export default function HomePage() {
       {mobileMenuOpen && (
         <div className="relative z-40 flex flex-col gap-4 p-4 text-white bg-blue-900 shadow-xl md:hidden">
           <a href="#features" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Features</a>
+          <button onClick={() => { navigate('/trainers'); setMobileMenuOpen(false); }} className="p-2 text-left transition rounded hover:text-pink-300">Trainers</button>
           <a href="#dashboard" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Dashboard</a>
           <a href="#pricing" className="p-2 transition rounded hover:text-pink-300" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
 
+          {/* Mobile Dark Mode Toggle */}
+          <button
+            onClick={() => { toggleTheme(); setMobileMenuOpen(false); }}
+            className="flex items-center gap-2 p-2 text-left transition rounded hover:text-pink-300"
+          >
+            {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
+            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
 
           {/* Mobile Search */}
           <div className="relative mt-4 border-t border-blue-800 pt-4">
@@ -403,9 +455,8 @@ export default function HomePage() {
             <div className="flex items-center justify-between gap-3 p-2 mt-2 bg-blue-800 rounded-lg">
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center font-bold text-blue-900 bg-pink-300 rounded-full w-9 h-9">
-                  {(user?.fullName || user?.email || 'U').slice(0, 1).toUpperCase()}
+                  {(user?.fullName || user?.username || 'U').slice(0, 1).toUpperCase()}
                 </div>
-                <div className="font-semibold">{user?.fullName || user?.email}</div>
               </div>
               <button
                 onClick={() => { logout(); setMobileMenuOpen(false); navigate('/'); }}
@@ -447,35 +498,42 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col justify-center gap-4 md:flex-row">
             <button
-              onClick={() => navigate('/day-pass')}
+              onClick={() => navigate('/tour-our-gym')}
               className="px-10 py-4 text-xl font-bold text-white transition transform bg-pink-500 rounded-full shadow-2xl hover:bg-pink-600 hover:scale-105"
             >
-              Try Day Pass
+              Tour Our Gym
             </button>
             <button
-              onClick={() => navigate('/tour-our-gym')}
+              onClick={() => {
+                const pricingSection = document.querySelector('#pricing');
+                if (pricingSection) {
+                  pricingSection.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                  navigate('/#pricing');
+                }
+              }}
               className="px-10 py-4 text-xl font-bold text-white transition transform border-2 border-white rounded-full hover:bg-white hover:text-blue-900 hover:scale-105"
             >
-              Tour Our Gym
+              View Memberships
             </button>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="px-6 py-24 bg-slate-50">
-        <h2 className="mb-4 text-4xl font-bold text-center text-blue-900 md:text-5xl">Why Choose Fitness Sharks?</h2>
-        <p className="mb-16 text-xl text-center text-gray-500">Simple tools for complex goals.</p>
+      <section id="features" className="px-6 py-24 bg-slate-50 dark:bg-gray-800 transition-colors duration-300">
+        <h2 className="mb-4 text-4xl font-bold text-center text-blue-900 dark:text-blue-400 md:text-5xl">Why Choose Fitness Sharks?</h2>
+        <p className="mb-16 text-xl text-center text-gray-500 dark:text-gray-400">Simple tools for complex goals.</p>
         <div className="grid gap-8 mx-auto sm:grid-cols-2 lg:grid-cols-3 max-w-7xl">
           {features.map((feature, idx) => (
             <div
               key={idx}
-              className="p-8 transition duration-300 bg-white border-t-4 border-pink-500 shadow-xl cursor-pointer rounded-2xl hover:shadow-2xl hover:-translate-y-2"
+              className="p-8 transition duration-300 bg-white dark:bg-gray-700 border-t-4 border-pink-500 shadow-xl cursor-pointer rounded-2xl hover:shadow-2xl hover:-translate-y-2"
               onClick={handlePlaceholderClick} // Added placeholder handler
             >
               <div className="mb-4 text-5xl">{feature.icon}</div>
-              <h3 className="mb-3 text-2xl font-bold text-blue-900">{feature.title}</h3>
-              <p className="leading-relaxed text-gray-600">{feature.desc}</p>
+              <h3 className="mb-3 text-2xl font-bold text-blue-900 dark:text-blue-400">{feature.title}</h3>
+              <p className="leading-relaxed text-gray-600 dark:text-gray-300">{feature.desc}</p>
             </div>
           ))}
         </div>
@@ -573,9 +631,9 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="px-6 py-24 bg-slate-50">
-        <h2 className="mb-4 text-4xl font-bold text-center text-blue-900 md:text-5xl">Simple Pricing, Powerful Results</h2>
-        <p className="mb-16 text-xl text-center text-gray-600">Choose the plan that fits your fitness journey.</p>
+      <section id="pricing" className="px-6 py-24 bg-slate-50 dark:bg-gray-800 transition-colors duration-300">
+        <h2 className="mb-4 text-4xl font-bold text-center text-blue-900 dark:text-blue-400 md:text-5xl">Simple Pricing, Powerful Results</h2>
+        <p className="mb-16 text-xl text-center text-gray-600 dark:text-gray-400">Choose the plan that fits your fitness journey.</p>
 
         <div className="grid max-w-6xl gap-8 mx-auto lg:grid-cols-3">
           {pricingTiers.map((tier, idx) => (
@@ -600,25 +658,56 @@ export default function HomePage() {
                 ))}
               </ul>
 
-              <button
-                onClick={() => {
-                  if (tier.name === 'Day Pass') {
-                    navigate('/day-pass');
-                  } else if (tier.name === 'Monthly') {
-                    navigate('/monthly');
-                  } else if (tier.name === 'Annual') {
-                    navigate('/annual');
-                  } else {
-                    navigate('/login');
-                  }
-                }}
-                className={`w-full py-3 rounded-full font-bold text-lg transition transform hover:scale-[1.01] ${tier.primary
-                  ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-lg shadow-pink-500/50'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
-                  }`}
-              >
-                {tier.cta}
-              </button>
+              {(() => {
+                // Check if user has this membership
+                const userMembership = isAuthenticated && user?.purchases?.find(p =>
+                  p.type === 'membership' &&
+                  p.status === 'active' &&
+                  (p.membershipId === tier.id || p.name === tier.name)
+                );
+
+                if (userMembership) {
+                  return (
+                    <div className="space-y-3">
+                      <div className="w-full py-3 rounded-full font-bold text-lg bg-green-100 text-green-800 text-center">
+                        ✓ Current Plan
+                      </div>
+                      <button
+                        onClick={() => {
+                          if (isAuthenticated) {
+                            navigate(`/subscribe/${tier.id || tier.name.toLowerCase()}`);
+                          } else {
+                            navigate('/login');
+                          }
+                        }}
+                        className="w-full py-2 rounded-full font-medium text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 transition"
+                      >
+                        Change Plan
+                      </button>
+                    </div>
+                  );
+                }
+
+                return (
+                  <button
+                    onClick={() => {
+                      if (isAuthenticated) {
+                        // Navigate to subscription page with membership plan ID
+                        navigate(`/subscribe/${tier.id || tier.name.toLowerCase()}`);
+                      } else {
+                        // Redirect to login first
+                        navigate('/login');
+                      }
+                    }}
+                    className={`w-full py-3 rounded-full font-bold text-lg transition transform hover:scale-[1.01] ${tier.primary
+                      ? 'bg-pink-500 hover:bg-pink-600 text-white shadow-lg shadow-pink-500/50'
+                      : 'bg-blue-600 hover:bg-blue-700 text-white'
+                      }`}
+                  >
+                    {tier.cta}
+                  </button>
+                );
+              })()}
             </div>
           ))}
         </div>
@@ -631,32 +720,7 @@ export default function HomePage() {
             <div>
               <h4 className="mb-4 text-2xl font-bold tracking-wider text-blue-400">Fitness Sharks</h4>
               <p className="text-gray-400">Premium gym and fitness center dedicated to helping you achieve your health and fitness goals.</p>
-              <div className="flex gap-4 mt-4">
-                <button
-                  type="button"
-                  onClick={handlePlaceholderClick}
-                  className="p-2 text-gray-400 transition rounded-full hover:text-blue-400 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  aria-label="Facebook"
-                >
-                  <Facebook size={20} />
-                </button>
-                <button
-                  type="button"
-                  onClick={handlePlaceholderClick}
-                  className="p-2 text-gray-400 transition rounded-full hover:text-blue-400 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  aria-label="Twitter"
-                >
-                  <Twitter size={20} />
-                </button>
-                <button
-                  type="button"
-                  onClick={handlePlaceholderClick}
-                  className="p-2 text-gray-400 transition rounded-full hover:text-pink-400 hover:bg-pink-900 focus:outline-none focus:ring-2 focus:ring-pink-400"
-                  aria-label="Instagram"
-                >
-                  <Instagram size={20} />
-                </button>
-              </div>
+
             </div>
 
             {footerLinks.map((section, idx) => (

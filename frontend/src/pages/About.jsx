@@ -44,15 +44,15 @@ export default function AboutPage() {
     const handlePlaceholderClick = () => console.log("Action triggered");
 
     return (
-        <div className="min-h-screen font-sans bg-white">
+        <div className="min-h-screen font-sans bg-white dark:bg-gray-900 transition-colors duration-300">
             <Navigation />
 
             {/* Back to Home Button */}
-            <div className="px-6 py-4 bg-gray-50">
+            <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto">
                     <button
                         onClick={() => navigate('/')}
-                        className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:text-blue-800 transition font-semibold"
+                        className="flex items-center gap-2 px-4 py-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition font-semibold"
                     >
                         <ArrowLeft size={20} />
                         Back to Home
@@ -72,30 +72,30 @@ export default function AboutPage() {
             </section>
 
             {/* Mission & Vision */}
-            <section className="px-6 py-20 bg-slate-50">
+            <section className="px-6 py-20 bg-slate-50 dark:bg-gray-800 transition-colors duration-300">
                 <div className="max-w-6xl mx-auto">
                     <div className="grid gap-12 md:grid-cols-2">
-                        <div className="p-8 bg-white shadow-lg rounded-2xl">
+                        <div className="p-8 bg-white dark:bg-gray-700 shadow-lg rounded-2xl transition-colors duration-300">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="p-4 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl">
                                     <Target className="text-white" size={40} />
                                 </div>
-                                <h2 className="text-3xl font-bold text-blue-900">Our Mission</h2>
+                                <h2 className="text-3xl font-bold text-blue-900 dark:text-blue-400">Our Mission</h2>
                             </div>
-                            <p className="text-lg leading-relaxed text-gray-700">
+                            <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
                                 To make fitness accessible, enjoyable, and effective for everyone by providing world-class training programs,
                                 expert nutrition guidance, and a supportive community that celebrates every milestone on your fitness journey.
                             </p>
                         </div>
 
-                        <div className="p-8 bg-white shadow-lg rounded-2xl">
+                        <div className="p-8 bg-white dark:bg-gray-700 shadow-lg rounded-2xl transition-colors duration-300">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="p-4 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl">
                                     <Globe className="text-white" size={40} />
                                 </div>
-                                <h2 className="text-3xl font-bold text-blue-900">Our Vision</h2>
+                                <h2 className="text-3xl font-bold text-blue-900 dark:text-blue-400">Our Vision</h2>
                             </div>
-                            <p className="text-lg leading-relaxed text-gray-700">
+                            <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
                                 To become the world's most trusted fitness platform, helping millions of people transform their lives through
                                 sustainable fitness habits, cutting-edge technology, and a global community that inspires positive change.
                             </p>
@@ -151,19 +151,19 @@ export default function AboutPage() {
             </section>
 
             {/* Values Section */}
-            <section className="px-6 py-20 bg-slate-50">
+            <section className="px-6 py-20 bg-slate-50 dark:bg-gray-800 transition-colors duration-300">
                 <div className="max-w-6xl mx-auto">
-                    <h2 className="mb-4 text-4xl font-bold text-center text-blue-900">Our Core Values</h2>
-                    <p className="mb-16 text-xl text-center text-gray-600">The principles that guide everything we do</p>
+                    <h2 className="mb-4 text-4xl font-bold text-center text-blue-900 dark:text-blue-400">Our Core Values</h2>
+                    <p className="mb-16 text-xl text-center text-gray-600 dark:text-gray-300">The principles that guide everything we do</p>
 
                     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                         {values.map((value, index) => (
-                            <div key={index} className="p-8 bg-white shadow-lg rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition duration-300">
+                            <div key={index} className="p-8 bg-white dark:bg-gray-700 shadow-lg rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition duration-300">
                                 <div className="flex justify-center mb-6 text-pink-600">
                                     {value.icon}
                                 </div>
-                                <h3 className="mb-4 text-2xl font-bold text-center text-blue-900">{value.title}</h3>
-                                <p className="leading-relaxed text-center text-gray-600">{value.description}</p>
+                                <h3 className="mb-4 text-2xl font-bold text-center text-blue-900 dark:text-blue-400">{value.title}</h3>
+                                <p className="leading-relaxed text-center text-gray-600 dark:text-gray-300">{value.description}</p>
                             </div>
                         ))}
                     </div>
@@ -210,10 +210,10 @@ export default function AboutPage() {
                         Become part of a global community of 500,000+ members transforming their lives through fitness
                     </p>
                     <div className="flex flex-col justify-center gap-4 md:flex-row">
-                        <button onClick={handlePlaceholderClick} className="px-10 py-4 text-xl font-bold text-blue-900 transition transform bg-white rounded-full shadow-2xl hover:bg-gray-100 hover:scale-105">
+                        <button onClick={() => navigate('/signup')} className="px-10 py-4 text-xl font-bold text-blue-900 transition transform bg-white rounded-full shadow-2xl hover:bg-gray-100 hover:scale-105">
                             Start Your Journey
                         </button>
-                        <button onClick={handlePlaceholderClick} className="px-10 py-4 text-xl font-bold text-white transition transform border-2 border-white rounded-full hover:bg-white hover:text-pink-600 hover:scale-105">
+                        <button onClick={() => navigate('/contact')} className="px-10 py-4 text-xl font-bold text-white transition transform border-2 border-white rounded-full hover:bg-white hover:text-pink-600 hover:scale-105">
                             Contact Us
                         </button>
                     </div>

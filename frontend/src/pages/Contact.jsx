@@ -122,15 +122,15 @@ export default function ContactPage() {
     };
 
     return (
-        <div className="min-h-screen font-sans bg-white">
+        <div className="min-h-screen font-sans bg-white dark:bg-gray-900 transition-colors duration-300">
             <Navigation />
 
             {/* Back to Home Button */}
-            <div className="px-6 py-4 bg-gray-50">
+            <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto">
                     <button
                         onClick={() => navigate('/')}
-                        className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:text-blue-800 transition font-semibold"
+                        className="flex items-center gap-2 px-4 py-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition font-semibold"
                     >
                         <ArrowLeft size={20} />
                         Back to Home
@@ -151,18 +151,18 @@ export default function ContactPage() {
             </section>
 
             {/* Contact Info Cards */}
-            <section className="px-6 py-20 bg-slate-50">
+            <section className="px-6 py-20 bg-slate-50 dark:bg-gray-800 transition-colors duration-300">
                 <div className="max-w-6xl mx-auto">
                     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                         {contactInfo.map((info, idx) => (
-                            <div key={idx} className="p-6 transition duration-300 bg-white shadow-lg rounded-2xl hover:shadow-xl hover:-translate-y-1">
+                            <div key={idx} className="p-6 transition duration-300 bg-white dark:bg-gray-700 shadow-lg rounded-2xl hover:shadow-xl hover:-translate-y-1">
                                 <div className={`flex items-center justify-center w-16 h-16 mb-4 rounded-full ${info.color}`}>
                                     {info.icon}
                                 </div>
-                                <h3 className="mb-3 text-xl font-bold text-blue-900">{info.title}</h3>
+                                <h3 className="mb-3 text-xl font-bold text-blue-900 dark:text-blue-400">{info.title}</h3>
                                 <div className="space-y-2">
                                     {info.details.map((detail, i) => (
-                                        <p key={i} className="text-gray-600">{detail}</p>
+                                        <p key={i} className="text-gray-600 dark:text-gray-300">{detail}</p>
                                     ))}
                                 </div>
                             </div>
@@ -172,57 +172,57 @@ export default function ContactPage() {
             </section>
 
             {/* Contact Form & Map Section */}
-            <section className="px-6 py-20 bg-white">
+            <section className="px-6 py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
                 <div className="grid max-w-6xl gap-12 mx-auto lg:grid-cols-2">
                     {/* Contact Form */}
                     <div>
-                        <h2 className="mb-4 text-4xl font-bold text-blue-900">Send Us a Message</h2>
-                        <p className="mb-8 text-lg text-gray-600">Fill out the form below and we will get back to you within 24 hours.</p>
+                        <h2 className="mb-4 text-4xl font-bold text-blue-900 dark:text-blue-400">Send Us a Message</h2>
+                        <p className="mb-8 text-lg text-gray-600 dark:text-gray-300">Fill out the form below and we will get back to you within 24 hours.</p>
 
                         <div className="space-y-6">
                             <div>
-                                <label className="block mb-2 text-sm font-semibold text-gray-700">Full Name *</label>
+                                <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Full Name *</label>
                                 <input
                                     type="text"
                                     name="name"
                                     value={formData.name}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-colors duration-300"
                                     placeholder="John Doe"
                                 />
                             </div>
 
                             <div>
-                                <label className="block mb-2 text-sm font-semibold text-gray-700">Email Address *</label>
+                                <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Email Address *</label>
                                 <input
                                     type="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-colors duration-300"
                                     placeholder="john@example.com"
                                 />
                             </div>
 
                             <div>
-                                <label className="block mb-2 text-sm font-semibold text-gray-700">Phone Number</label>
+                                <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Phone Number</label>
                                 <input
                                     type="tel"
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-colors duration-300"
                                     placeholder="+94 77 123 4567"
                                 />
                             </div>
 
                             <div>
-                                <label className="block mb-2 text-sm font-semibold text-gray-700">Subject *</label>
+                                <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Subject *</label>
                                 <select
                                     name="subject"
                                     value={formData.subject}
                                     onChange={handleInputChange}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-colors duration-300"
                                 >
                                     <option value="">Select a subject</option>
                                     <option value="membership">Membership Inquiry</option>
@@ -236,13 +236,13 @@ export default function ContactPage() {
                             </div>
 
                             <div>
-                                <label className="block mb-2 text-sm font-semibold text-gray-700">Message *</label>
+                                <label className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Message *</label>
                                 <textarea
                                     name="message"
                                     value={formData.message}
                                     onChange={handleInputChange}
                                     rows={5}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+                                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none transition-colors duration-300"
                                     placeholder="Tell us how we can help you..."
                                 ></textarea>
                             </div>
@@ -351,16 +351,7 @@ export default function ContactPage() {
                         ))}
                     </div>
 
-                    <div className="p-8 mt-12 text-center bg-white shadow-lg rounded-2xl">
-                        <h3 className="mb-3 text-2xl font-bold text-blue-900">Still Have Questions?</h3>
-                        <p className="mb-6 text-gray-600">Our team is ready to help you with any inquiries.</p>
-                        <a
-                            href="tel:+94112345678"
-                            className="inline-block px-8 py-3 font-bold text-white transition transform bg-pink-500 rounded-full shadow-lg hover:bg-pink-600 hover:scale-105"
-                        >
-                            Contact Support
-                        </a>
-                    </div>
+
                 </div>
             </section>
 

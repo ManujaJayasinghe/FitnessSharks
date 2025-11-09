@@ -217,16 +217,16 @@ export default function TourOurGym() {
 
                     <div className="flex flex-col justify-center gap-4 sm:flex-row">
                         <button
-                            onClick={() => navigate('/day-pass')}
+                            onClick={() => navigate('/#pricing')}
                             className="px-8 py-4 text-lg font-bold transition transform bg-pink-500 rounded-full hover:bg-pink-600 hover:scale-105"
                         >
-                            Get Day Pass
+                            View Membership Plans
                         </button>
                         <button
-                            onClick={() => navigate('/monthly')}
+                            onClick={() => navigate('/trainers')}
                             className="px-8 py-4 text-lg font-bold text-blue-900 transition transform bg-white rounded-full hover:bg-gray-100 hover:scale-105"
                         >
-                            View Memberships
+                            Meet Our Trainers
                         </button>
                     </div>
                 </div>

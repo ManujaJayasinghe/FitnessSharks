@@ -10,9 +10,9 @@ export default function AuthPage({ defaultMode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
+    username: '',
     email: '',
     password: '',
-    fullName: '',
     phone: '',
     confirmPassword: '',
     userType: 'member' // 'admin' or 'member'
@@ -72,11 +72,17 @@ export default function AuthPage({ defaultMode }) {
     setIsSubmitting(true);
     const newErrors = {};
 
-    // Validate email
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+    // Validate username for login, email for signup
+    if (isLogin) {
+      if (!formData.username) {
+        newErrors.username = 'Username is required';
+      }
+    } else {
+      if (!formData.email) {
+        newErrors.email = 'Email is required';
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = 'Email is invalid';
+      }
     }
 
     // Validate password
@@ -91,9 +97,6 @@ export default function AuthPage({ defaultMode }) {
 
     // Validate signup fields
     if (!isLogin) {
-      if (!formData.fullName) {
-        newErrors.fullName = 'Full name is required';
-      }
       if (!formData.phone) {
         newErrors.phone = 'Phone number is required';
       }
@@ -109,47 +112,109 @@ export default function AuthPage({ defaultMode }) {
     if (Object.keys(newErrors).length === 0) {
       try {
         if (isLogin) {
-          // Simulate login process
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          // Real login with backend API
+          const credentials = {
+            username: formData.username,
+            password: formData.password
+          };
 
-          // Check for admin credentials
-          let userType = formData.userType;
-          if (formData.email === 'admin@fitnesssharks.lk' && formData.password === 'admin123') {
-            userType = 'admin';
-          }
-
-          const userData = login({
-            email: formData.email,
-            password: formData.password,
-            userType: userType
-          });
-          console.log('Login successful:', userData);
-          console.log('User type:', userType);
-          console.log('Navigating to:', userType === 'admin' ? '/admin-dashboard' : '/');
-
-          // Redirect based on user type
-          if (userType === 'admin') {
-            navigate('/admin-dashboard');
+          const result = await login(credentials);
+          
+          if (result.success) {
+            console.log('Login successful:', result.user);
+            console.log('User type from backend:', result.user.userType);
+            console.log('Selected user type:', formData.userType);
+            
+            // Check if user type matches the selected login type
+            if (formData.userType === 'admin' && result.user.userType !== 'admin') {
+              setErrors({ general: 'These credentials belong to a member account. Please use the member login or contact admin.' });
+              return;
+            }
+            
+            if (formData.userType === 'member' && result.user.userType === 'admin') {
+              setErrors({ general: 'These credentials belong to an admin account. Please use the admin login.' });
+              return;
+            }
+            
+            // Show welcome popup
+            const userName = result.user.fullName || result.user.username || 'User';
+            
+            // Create and show professional welcome notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-6 right-6 bg-white border border-gray-200 shadow-xl rounded-xl px-6 py-4 z-50 transform transition-all duration-300 ease-out max-w-sm';
+            notification.style.transform = 'translateX(400px)';
+            notification.innerHTML = `
+              <div class="flex items-start gap-4">
+                <div class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-semibold text-gray-900">Login Successful</div>
+                  <div class="text-sm text-gray-600 mt-1">Welcome back, ${userName}</div>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" class="flex-shrink-0 text-gray-400 hover:text-gray-600">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+            `;
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+              notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Auto-remove after 5 seconds with animation
+            setTimeout(() => {
+              if (document.body.contains(notification)) {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                  if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                  }
+                }, 300);
+              }
+            }, 5000);
+            
+            // Redirect based on user type
+            if (result.user.userType === 'admin') {
+              console.log('Redirecting to admin dashboard...');
+              navigate('/admin-dashboard');
+            } else {
+              console.log('Redirecting to home...');
+              navigate('/');
+            }
           } else {
-            navigate('/');
+            // Show error message
+            setErrors({ general: result.message || 'Login failed. Please check your credentials.' });
           }
         } else {
-          // Simulate signup process - only allow member signup
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          const userData = signup({
+          // Real signup with backend API
+          const userData = {
             email: formData.email,
             password: formData.password,
-            fullName: formData.fullName,
             phone: formData.phone,
             userType: 'member' // Force member type for signup
-          });
-          console.log('Account created successfully:', userData);
-          // Always redirect to home for new member signups
-          navigate('/');
+          };
+
+          const result = await signup(userData);
+          
+          if (result.success) {
+            console.log('Account created successfully:', result.user);
+            // Always redirect to home for new member signups
+            navigate('/');
+          } else {
+            // Show error message
+            setErrors({ general: result.message || 'Registration failed. Please try again.' });
+          }
         }
       } catch (error) {
         console.error('Authentication error:', error);
-        alert('An error occurred. Please try again.');
+        setErrors({ general: 'An error occurred. Please try again.' });
       }
     }
 
@@ -245,49 +310,39 @@ export default function AuthPage({ defaultMode }) {
                 </div>
               )}
             </div>
-            {/* Full Name - Signup Only */}
-            {!isLogin && (
-              <div>
-                <label className="block mb-2 text-sm font-semibold text-gray-700">
-                  Full Name
-                </label>
-                <div className="relative">
-                  <User className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    placeholder="John Doe"
-                    className={`w-full py-3 pl-12 pr-4 transition border-2 rounded-xl focus:outline-none ${errors.fullName ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
-                      }`}
-                  />
-                </div>
-                {errors.fullName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
-                )}
-              </div>
-            )}
 
-            {/* Email */}
+            {/* Username for Login, Email for Signup */}
             <div>
               <label className="block mb-2 text-sm font-semibold text-gray-700">
-                Email Address
+                {isLogin ? 'Username' : 'Email Address'}
               </label>
               <div className="relative">
-                <Mail className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+                {isLogin ? (
+                  <User className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+                ) : (
+                  <Mail className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+                )}
                 <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
+                  type={isLogin ? "text" : "email"}
+                  name={isLogin ? "username" : "email"}
+                  value={isLogin ? formData.username : formData.email}
                   onChange={handleChange}
-                  placeholder="you@example.com"
-                  className={`w-full py-3 pl-12 pr-4 transition border-2 rounded-xl focus:outline-none ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
-                    }`}
+                  placeholder={isLogin ? "Enter your username" : "you@example.com"}
+                  className={`w-full py-3 pl-12 pr-4 transition border-2 rounded-xl focus:outline-none ${
+                    (isLogin ? errors.username : errors.email) 
+                      ? 'border-red-500 focus:border-red-500' 
+                      : 'border-gray-200 focus:border-blue-500'
+                  }`}
                 />
               </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              {isLogin ? (
+                errors.username && (
+                  <p className="mt-1 text-sm text-red-600">{errors.username}</p>
+                )
+              ) : (
+                errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )
               )}
             </div>
 
@@ -328,6 +383,7 @@ export default function AuthPage({ defaultMode }) {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="••••••••"
+                  autoComplete="new-password"
                   className={`w-full py-3 pl-12 pr-12 transition border-2 rounded-xl focus:outline-none ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-blue-500'
                     }`}
                 />
@@ -426,16 +482,16 @@ export default function AuthPage({ defaultMode }) {
               </div>
             )}
 
-            {/* Admin Credentials Info */}
-            {isLogin && formData.userType === 'admin' && (
-              <div className="p-4 bg-purple-50 border border-purple-200 rounded-xl">
-                <div className="text-sm text-purple-800">
-                  <div className="font-semibold mb-1">Admin Test Credentials:</div>
-                  <div>Email: admin@fitnesssharks.lk</div>
-                  <div>Password: admin123</div>
+            {/* General Error Message */}
+            {errors.general && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                <div className="text-sm text-red-800">
+                  {errors.general}
                 </div>
               </div>
             )}
+
+
 
             {/* Submit Button */}
             <button
@@ -457,51 +513,7 @@ export default function AuthPage({ defaultMode }) {
             </button>
           </div>
 
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 font-medium text-gray-500 bg-white">Or continue with</span>
-            </div>
-          </div>
 
-          {/* Social Login Buttons */}
-          <div className="space-y-3">
-            <button
-              onClick={() => handleSocialLogin('Google')}
-              className="flex items-center justify-center w-full gap-3 px-4 py-3 font-semibold transition border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-              </svg>
-              Continue with Google
-            </button>
-
-            <button
-              onClick={() => handleSocialLogin('Facebook')}
-              className="flex items-center justify-center w-full gap-3 px-4 py-3 font-semibold text-white transition bg-blue-600 rounded-xl hover:bg-blue-700"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-              </svg>
-              Continue with Facebook
-            </button>
-
-            <button
-              onClick={() => handleSocialLogin('Twitter')}
-              className="flex items-center justify-center w-full gap-3 px-4 py-3 font-semibold text-white transition bg-black rounded-xl hover:bg-gray-900"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-              Continue with Twitter
-            </button>
-          </div>
 
           {/* Toggle Login/Signup */}
           <div className="mt-6 text-center">
@@ -511,9 +523,28 @@ export default function AuthPage({ defaultMode }) {
                 type="button"
                 onClick={() => {
                   setIsLogin(!isLogin);
-                  // When switching to signup mode, force userType to 'member'
+                  setErrors({}); // Clear errors
+                  // Clear form data and set appropriate defaults
                   if (isLogin) {
-                    setFormData({ ...formData, userType: 'member' });
+                    // Switching to signup mode
+                    setFormData({ 
+                      username: '',
+                      email: '',
+                      password: '',
+                      phone: '',
+                      confirmPassword: '',
+                      userType: 'member' 
+                    });
+                  } else {
+                    // Switching to login mode
+                    setFormData({ 
+                      username: '',
+                      email: '',
+                      password: '',
+                      phone: '',
+                      confirmPassword: '',
+                      userType: 'member' 
+                    });
                   }
                 }}
                 className="font-bold text-blue-600 hover:text-blue-700"
