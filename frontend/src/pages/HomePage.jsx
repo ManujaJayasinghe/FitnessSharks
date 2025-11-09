@@ -324,12 +324,12 @@ export default function HomePage() {
             <div className="relative">
               <button
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                className="flex items-center gap-3 px-3 py-2 transition rounded-full hover:bg-blue-800"
+                className="flex items-center gap-2 px-2 py-2 transition rounded-full hover:bg-blue-800"
               >
                 <div className="flex items-center justify-center font-bold text-blue-900 bg-pink-300 rounded-full w-9 h-9">
-                  {(user?.username || user?.email || 'U').slice(0, 1).toUpperCase()}
+                  {(user?.fullName || user?.username || 'U').slice(0, 1).toUpperCase()}
                 </div>
-                <span className="font-semibold">{user?.username || user?.email}</span>
+                <ChevronDown size={16} className={`transition-transform ${profileMenuOpen ? 'rotate-180' : 'rotate-0'}`} />
               </button>
               {profileMenuOpen && (
                 <div className="absolute right-0 w-48 mt-2 overflow-hidden bg-white rounded-lg shadow-2xl">
@@ -455,9 +455,8 @@ export default function HomePage() {
             <div className="flex items-center justify-between gap-3 p-2 mt-2 bg-blue-800 rounded-lg">
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center font-bold text-blue-900 bg-pink-300 rounded-full w-9 h-9">
-                  {(user?.username || user?.email || 'U').slice(0, 1).toUpperCase()}
+                  {(user?.fullName || user?.username || 'U').slice(0, 1).toUpperCase()}
                 </div>
-                <div className="font-semibold">{user?.username || user?.email}</div>
               </div>
               <button
                 onClick={() => { logout(); setMobileMenuOpen(false); navigate('/'); }}

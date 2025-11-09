@@ -123,12 +123,11 @@ export default function SharedNavigation({ title, showBackButton = true }) {
                         <div className="relative">
                             <button
                                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                                className="flex items-center gap-3 px-3 py-2 transition rounded-full hover:bg-blue-800"
+                                className="flex items-center gap-2 px-2 py-2 transition rounded-full hover:bg-blue-800"
                             >
                                 <div className="flex items-center justify-center font-bold text-blue-900 bg-pink-300 rounded-full w-9 h-9">
-                                    {(user?.username || user?.email || 'U').slice(0, 1).toUpperCase()}
+                                    {(user?.fullName || user?.username || 'U').slice(0, 1).toUpperCase()}
                                 </div>
-                                <span className="font-semibold">{user?.username || user?.email}</span>
                                 <ChevronDown size={16} className={`transition-transform ${profileMenuOpen ? 'rotate-180' : 'rotate-0'}`} />
                             </button>
                             {profileMenuOpen && (
@@ -222,9 +221,9 @@ export default function SharedNavigation({ title, showBackButton = true }) {
                                 <div className="pt-2 border-t border-blue-700">
                                     <div className="flex items-center gap-2 px-2 py-2 mb-2">
                                         <div className="flex items-center justify-center font-bold text-blue-900 bg-pink-300 rounded-full w-8 h-8">
-                                            {(user?.username || user?.email || 'U').slice(0, 1).toUpperCase()}
+                                            {(user?.fullName || user?.username || 'U').slice(0, 1).toUpperCase()}
                                         </div>
-                                        <span className="font-semibold">{user?.username || user?.email}</span>
+                                        <span className="font-semibold">{user?.fullName || user?.username || 'User'}</span>
                                     </div>
                                     <button onClick={() => { navigate('/profile'); setMobileMenuOpen(false); }} className="block w-full px-2 py-2 text-left transition rounded hover:text-pink-300">My Profile</button>
 
