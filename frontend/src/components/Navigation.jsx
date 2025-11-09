@@ -129,11 +129,12 @@ export default function Navigation() {
                 <div className="relative hidden md:block">
                     <button
                         onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                        className="flex items-center gap-2 px-2 py-2 transition rounded-full hover:bg-blue-800"
+                        className="flex items-center gap-3 px-3 py-2 transition rounded-full hover:bg-blue-800"
                     >
                         <div className="flex items-center justify-center font-bold text-blue-900 bg-pink-300 rounded-full w-9 h-9">
                             {(user?.username || user?.fullName || 'U').slice(0, 1).toUpperCase()}
                         </div>
+                        <span className="font-semibold">{user?.username || user?.fullName || 'User'}</span>
                         <ChevronDown size={16} className={`transition-transform ${profileMenuOpen ? 'rotate-180' : 'rotate-0'}`} />
                     </button>
                     {profileMenuOpen && (
